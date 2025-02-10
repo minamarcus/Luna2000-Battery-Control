@@ -20,21 +20,27 @@ class BatteryManager:
             logger.error(f"Connection error: {e}")
             return None
 
-    def _decode_flags(self, register_value: int) -> tuple:
+    def _decode_flags(self, flag_value: int) -> tuple:
         """
-        Decode the combined flags from a register value.
-        - Lower byte (bits 0-7): charge/discharge flag (0=charge, 1=discharge)
-        - Upper byte (bits 8-15): day bitmap (bit 0=Sunday, bit 1=Monday, etc.)
+        Decode the combined flags value into charge flag and day bits.
+        Values examples:
+        4 = Tuesday and charging
+        260 = Tuesday and discharging (4 + 256)
         """
-        charge_flag = register_value & 0xFF  # Get lower byte
-        day_bits = (register_value >> 8) & 0xFF  # Get upper byte
+        charge_flag = 1 if flag_value >= 256 else 0
+        day_bits = flag_value & 0x7F  # Get only the day bits (0-127)
         return charge_flag, day_bits
 
     def _encode_flags(self, charge_flag: int, day_bits: int) -> int:
         """
-        Encode charge flag and day bits into a single register value.
+        Encode charge flag and day bits into a single value.
+        charge_flag: 0=charge, 1=discharge
+        day_bits: day value (1=Sunday, 2=Monday, 4=Tuesday, etc.)
+        Returns:
+        - Just day_bits for charging (e.g., 4 for Tuesday)
+        - day_bits + 256 for discharging (e.g., 260 for Tuesday)
         """
-        return ((day_bits & 0xFF) << 8) | (charge_flag & 0xFF)
+        return day_bits + (256 if charge_flag == 1 else 0)
 
     def _parse_schedule(self, data: List[int]) -> Dict:
         """Parse raw register data into a structured format."""
@@ -42,16 +48,16 @@ class BatteryManager:
         periods = []
 
         for i in range(num_periods):
-            base_idx = 1 + (i * 3)  # Changed from 4 to 3 as flags are combined
+            base_idx = 1 + (i * 3)  # Each period takes 3 values
             if base_idx + 2 >= len(data):
                 break
 
             start_time = data[base_idx]
             end_time = data[base_idx + 1]
-            combined_flags = data[base_idx + 2]
+            period_flags = data[base_idx + 2]
             
             # Decode the combined flags
-            charge_flag, day_bits = self._decode_flags(combined_flags)
+            charge_flag, day_bits = self._decode_flags(period_flags)
 
             periods.append({
                 'start_time': start_time,
@@ -97,12 +103,23 @@ class BatteryManager:
 
     def create_register_data(self, periods: List[Dict]) -> List[int]:
         """Create register data format from periods."""
+        if len(periods) > 14:
+            raise ValueError("Maximum 14 periods allowed")
+            
         data = [len(periods)]  # Number of periods
         
         for period in sorted(periods, key=lambda x: x['start_time']):
+            # Validate time range
+            if not (0 <= period['start_time'] <= 1440 and 0 <= period['end_time'] <= 1440):
+                raise ValueError("Time values must be between 0 and 1440 minutes")
+            
+            # Convert the weekday to the correct bit value (1=Sunday, 2=Monday, 4=Tuesday, etc.)
+            weekday = next((i for i in range(7) if period['days'] & (1 << i)), 0)
+            day_bit = 1 << weekday if weekday >= 0 else 0
+                
             combined_flags = self._encode_flags(
                 charge_flag=0 if period['is_charging'] else 1,
-                day_bits=period['days']
+                day_bits=day_bit
             )
             
             data.extend([

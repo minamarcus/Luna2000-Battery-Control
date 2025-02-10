@@ -75,6 +75,35 @@ class ScheduleManager:
 
         return charging_periods, discharging_periods
 
+    def _combine_consecutive_periods(self, periods: List[Dict]) -> List[Dict]:
+        """Combine consecutive periods with the same charging state."""
+        if not periods:
+            return []
+            
+        # Sort periods by start time
+        sorted_periods = sorted(periods, key=lambda x: x['start_time'])
+        combined = []
+        current_period = sorted_periods[0].copy()
+        
+        for next_period in sorted_periods[1:]:
+            current_end_hour = current_period['end_time'] // 60
+            next_start_hour = next_period['start_time'] // 60
+            
+            # Check if periods are consecutive and have the same charging state
+            if (current_end_hour == next_start_hour and 
+                current_period['is_charging'] == next_period['is_charging'] and
+                current_period['days'] == next_period['days']):
+                # Extend current period
+                current_period['end_time'] = next_period['end_time']
+            else:
+                # Add current period to combined list and start a new one
+                combined.append(current_period)
+                current_period = next_period.copy()
+        
+        # Add the last period
+        combined.append(current_period)
+        return combined
+
     def _process_periods(self, df: pd.DataFrame, is_charging: bool, 
                         day_bit: int) -> List[Dict]:
         """Process and create periods for either charging or discharging."""
@@ -115,7 +144,8 @@ class ScheduleManager:
                     )
                     used_hours.add(block_hour)
         
-        return periods
+        # Combine consecutive periods before returning
+        return self._combine_consecutive_periods(periods)
 
     def clean_schedule(self, schedule: Dict, current_date: datetime) -> List[Dict]:
         """Remove periods that aren't for the current day."""
@@ -171,21 +201,24 @@ class ScheduleManager:
             )
 
     def _combine_flags(self, charge_flag: int, days_bits: int) -> int:
-        """Combine charge flag and day bits into single 16-bit value.
+        """Combine charge flag and day bits into single value.
         
         Args:
             charge_flag: 0 for charge, 1 for discharge
-            days_bits: Bitmap of active days (bits 0-6 for Sun-Sat)
+            days_bits: Bitmap of active days (1=Sunday, 2=Monday, 4=Tuesday, etc.)
             
         Returns:
-            Combined 16-bit flags value
+            For charging: just the day_bits (e.g., 4 for Tuesday)
+            For discharging: day_bits + 256 (e.g., 260 for Tuesday)
         """
-        return ((days_bits & 0xFF) << 8) | (charge_flag & 0xFF)
+        return days_bits + (256 if charge_flag == 1 else 0)
 
     def update_schedule(self) -> bool:
         """Main function to update the schedule."""
         try:
             current_schedule = self.battery.read_schedule()
+            print("current_schedule")
+            print(current_schedule)
             if not current_schedule:
                 logger.error("Failed to read current schedule")
                 return False
@@ -229,8 +262,7 @@ class ScheduleManager:
             self.log_schedule(final_periods, "Final Schedule")
             
             # Write to battery
-            # success = self.battery.write_schedule(new_register_data)
-            print(new_register_data)
+            success = self.battery.write_schedule(new_register_data)
             success = True
             if success:
                 logger.info("Successfully updated battery schedule")
