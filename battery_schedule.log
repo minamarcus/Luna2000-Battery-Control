@@ -1,453 +1,133 @@
-2025-02-09 15:35:38,297 - INFO - Connected to mock battery
-2025-02-09 15:35:38,297 - INFO - Disconnected from mock battery
-2025-02-09 15:35:38,297 - INFO - Updating schedule at 2025-02-09 15:35:38.297849+01:00
-2025-02-09 15:35:38,297 - INFO - 
+2025-02-09 23:04:26,030 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-09 23:04:29,397 - INFO - Updating schedule at 2025-02-09 23:04:29.396448+01:00
+2025-02-09 23:04:29,398 - INFO - 
 === Current Schedule ===
-2025-02-09 15:35:38,407 - INFO - 
+2025-02-09 23:04:29,679 - INFO - 
 === New Periods for Tomorrow ===
-2025-02-09 15:35:38,407 - INFO - Period 1: Charging on Monday at 02:00-03:00
-2025-02-09 15:35:38,408 - INFO - Period 2: Charging on Monday at 03:00-04:00
-2025-02-09 15:35:38,408 - INFO - Period 3: Charging on Monday at 01:00-02:00
-2025-02-09 15:35:38,408 - INFO - Period 4: Charging on Monday at 04:00-05:00
-2025-02-09 15:35:38,409 - INFO - Period 5: Discharging on Monday at 08:00-09:00
-2025-02-09 15:35:38,409 - INFO - Period 6: Discharging on Monday at 09:00-10:00
-2025-02-09 15:35:38,409 - INFO - Period 7: Discharging on Monday at 10:00-11:00
-2025-02-09 15:35:38,409 - INFO - Period 8: Discharging on Monday at 07:00-08:00
-2025-02-09 15:35:38,409 - INFO - 
+2025-02-09 23:04:29,679 - INFO - Period 1: Charging on Monday at 01:00-02:00
+2025-02-09 23:04:29,679 - INFO - Period 2: Charging on Monday at 02:00-03:00
+2025-02-09 23:04:29,679 - INFO - Period 3: Charging on Monday at 03:00-04:00
+2025-02-09 23:04:29,679 - INFO - Period 4: Charging on Monday at 04:00-05:00
+2025-02-09 23:04:29,679 - INFO - Period 5: Discharging on Monday at 07:00-08:00
+2025-02-09 23:04:29,679 - INFO - Period 6: Discharging on Monday at 08:00-09:00
+2025-02-09 23:04:29,679 - INFO - Period 7: Discharging on Monday at 09:00-10:00
+2025-02-09 23:04:29,679 - INFO - Period 8: Discharging on Monday at 10:00-11:00
+2025-02-09 23:04:29,679 - INFO - 
 === Final Schedule ===
-2025-02-09 15:35:38,409 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 15:35:38,409 - INFO - Period 2: Charging on Monday at 02:00-03:00
-2025-02-09 15:35:38,409 - INFO - Period 3: Charging on Monday at 03:00-04:00
-2025-02-09 15:35:38,409 - INFO - Period 4: Charging on Monday at 04:00-05:00
-2025-02-09 15:35:38,409 - INFO - Period 5: Discharging on Monday at 07:00-08:00
-2025-02-09 15:35:38,409 - INFO - Period 6: Discharging on Monday at 08:00-09:00
-2025-02-09 15:35:38,409 - INFO - Period 7: Discharging on Monday at 09:00-10:00
-2025-02-09 15:35:38,409 - INFO - Period 8: Discharging on Monday at 10:00-11:00
-2025-02-09 15:35:38,409 - INFO - Connected to mock battery
-2025-02-09 15:35:38,409 - INFO - Successfully wrote schedule to mock battery
-2025-02-09 15:35:38,410 - INFO - Saved schedule to last_schedule.json
-2025-02-09 15:35:38,410 - INFO - Disconnected from mock battery
-2025-02-09 15:35:38,410 - INFO - Successfully updated schedule
-2025-02-09 15:35:38,410 - INFO - Schedule update completed successfully
-2025-02-09 15:44:30,180 - INFO - Connected to mock battery
-2025-02-09 15:44:30,181 - INFO - Disconnected from mock battery
-2025-02-09 16:13:43,467 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:13:43,468 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:13:43,468 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:13:43,468 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:13:43,469 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:13:43,469 - INFO - Updating schedule at 2025-02-09 16:13:43.469920+01:00
-2025-02-09 16:13:43,469 - INFO - 
+2025-02-09 23:04:29,680 - INFO - Period 1: Charging on Monday at 01:00-02:00
+2025-02-09 23:04:29,680 - INFO - Period 2: Charging on Monday at 02:00-03:00
+2025-02-09 23:04:29,680 - INFO - Period 3: Charging on Monday at 03:00-04:00
+2025-02-09 23:04:29,680 - INFO - Period 4: Charging on Monday at 04:00-05:00
+2025-02-09 23:04:29,680 - INFO - Period 5: Discharging on Monday at 07:00-08:00
+2025-02-09 23:04:29,680 - INFO - Period 6: Discharging on Monday at 08:00-09:00
+2025-02-09 23:04:29,680 - INFO - Period 7: Discharging on Monday at 09:00-10:00
+2025-02-09 23:04:29,680 - INFO - Period 8: Discharging on Monday at 10:00-11:00
+2025-02-09 23:04:29,690 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-09 23:04:33,562 - INFO - Successfully wrote schedule to battery
+2025-02-09 23:04:33,562 - INFO - Successfully updated battery schedule
+2025-02-09 23:04:33,562 - INFO - Schedule update completed successfully
+2025-02-10 00:01:37,625 - ERROR - Error reading schedule: 'BatteryManager' object has no attribute 'connect'
+2025-02-10 00:01:37,625 - ERROR - Failed to read current schedule
+2025-02-10 00:01:37,625 - ERROR - Schedule update failed
+2025-02-10 00:03:27,835 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 00:03:33,879 - ERROR - Exception response 131 / 0
+2025-02-10 00:03:33,880 - ERROR - Error reading register: ExceptionResponse(dev_id=1, transaction_id=1, address=0, count=0, bits=[], registers=[], status=1)
+2025-02-10 00:03:33,881 - ERROR - Failed to read current schedule
+2025-02-10 00:03:33,881 - ERROR - Schedule update failed
+2025-02-10 00:13:16,813 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 00:13:22,835 - ERROR - Exception response 131 / 0
+2025-02-10 00:13:22,836 - ERROR - Error reading register: ExceptionResponse(dev_id=1, transaction_id=1, address=0, count=0, bits=[], registers=[], status=1)
+2025-02-10 00:13:22,836 - ERROR - Failed to read current schedule
+2025-02-10 00:13:22,837 - ERROR - Schedule update failed
+2025-02-10 00:16:38,089 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 00:16:41,769 - INFO - Updating schedule at 2025-02-10 00:16:41.767865+01:00
+2025-02-10 00:16:41,770 - INFO - 
 === Current Schedule ===
-2025-02-09 16:13:43,472 - INFO - 
-=== New Periods for Tomorrow ===
-2025-02-09 16:13:43,472 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:13:43,472 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:13:43,472 - INFO - Period 3: Charging on Monday at 01:00-02:00
-2025-02-09 16:13:43,472 - INFO - Period 4: Charging on Monday at 01:00-02:00
-2025-02-09 16:13:43,472 - INFO - 
-=== Final Schedule ===
-2025-02-09 16:13:43,472 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:13:43,472 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:13:43,472 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:13:43,472 - INFO - Successfully updated battery schedule
-2025-02-09 16:15:26,772 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:15:26,773 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:15:26,773 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:15:26,773 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:15:26,774 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:15:26,775 - INFO - Updating schedule at 2025-02-09 16:15:26.775382+01:00
-2025-02-09 16:15:26,775 - INFO - 
+2025-02-10 00:16:41,770 - INFO - Period 1: Discharging on Monday at 00:00-04:00
+2025-02-10 00:16:41,770 - INFO - Period 2: Discharging on Monday at 04:00-10:00
+2025-02-10 00:16:42,101 - ERROR - Error fetching prices for 2025-02-11: 404 Client Error: Not Found for url: https://www.elprisetjustnu.se/api/v1/prices/2025/02-11_SE3.json
+2025-02-10 00:16:42,102 - ERROR - Failed to fetch tomorrow's prices
+2025-02-10 00:16:42,102 - ERROR - Schedule update failed
+2025-02-10 00:18:18,315 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 00:18:23,450 - INFO - Updating schedule at 2025-02-10 00:18:23.449812+01:00
+2025-02-10 00:18:23,450 - INFO - 
 === Current Schedule ===
-2025-02-09 16:15:26,778 - INFO - 
-=== New Periods for Tomorrow ===
-2025-02-09 16:15:26,778 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:15:26,778 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:15:26,778 - INFO - Period 3: Charging on Monday at 01:00-02:00
-2025-02-09 16:15:26,778 - INFO - Period 4: Charging on Monday at 01:00-02:00
-2025-02-09 16:15:26,779 - INFO - 
-=== Final Schedule ===
-2025-02-09 16:15:26,779 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:15:26,779 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:15:26,779 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:15:26,779 - INFO - Successfully updated battery schedule
-2025-02-09 16:21:34,045 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:21:34,046 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:21:34,047 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:21:34,047 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:21:34,048 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:21:34,048 - INFO - Updating schedule at 2025-02-09 16:21:34.048773+01:00
-2025-02-09 16:21:34,048 - INFO - 
+2025-02-10 00:18:23,450 - INFO - Period 1: Discharging on Monday at 00:00-04:00
+2025-02-10 00:18:23,450 - INFO - Period 2: Discharging on Monday at 04:00-10:00
+2025-02-10 00:18:23,565 - ERROR - Error fetching prices for 2025-02-11: 404 Client Error: Not Found for url: https://www.elprisetjustnu.se/api/v1/prices/2025/02-11_SE3.json
+2025-02-10 00:18:23,566 - ERROR - Failed to fetch tomorrow's prices
+2025-02-10 00:18:23,566 - ERROR - Schedule update failed
+2025-02-10 00:19:34,712 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 00:19:38,205 - INFO - Updating schedule at 2025-02-10 00:19:38.203523+01:00
+2025-02-10 00:19:38,206 - INFO - 
 === Current Schedule ===
-2025-02-09 16:21:34,051 - INFO - 
+2025-02-10 00:19:38,206 - INFO - Period 1: Discharging on Monday at 00:00-04:00
+2025-02-10 00:19:38,206 - INFO - Period 2: Discharging on Monday at 04:00-10:00
+2025-02-10 00:19:38,365 - INFO - 
 === New Periods for Tomorrow ===
-2025-02-09 16:21:34,052 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:21:34,052 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:21:34,052 - INFO - Period 3: Charging on Monday at 01:00-02:00
-2025-02-09 16:21:34,052 - INFO - Period 4: Charging on Monday at 01:00-02:00
-2025-02-09 16:21:34,052 - INFO - 
-=== Final Schedule ===
-2025-02-09 16:21:34,053 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:21:34,053 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:21:34,053 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:21:34,053 - INFO - Successfully updated battery schedule
-2025-02-09 16:23:06,573 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:06,574 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:06,574 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:06,575 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:23:06,576 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:06,576 - INFO - Updating schedule at 2025-02-09 16:23:06.576365+01:00
-2025-02-09 16:23:06,576 - INFO - 
+2025-02-10 00:19:38,365 - INFO - Period 1: Charging on Tuesday at 01:00-02:00
+2025-02-10 00:19:38,365 - INFO - Period 2: Charging on Tuesday at 02:00-03:00
+2025-02-10 00:19:38,365 - INFO - Period 3: Charging on Tuesday at 03:00-04:00
+2025-02-10 00:19:38,365 - INFO - Period 4: Charging on Tuesday at 04:00-05:00
+2025-02-10 00:19:38,365 - INFO - Period 5: Discharging on Tuesday at 07:00-08:00
+2025-02-10 00:19:38,365 - INFO - Period 6: Discharging on Tuesday at 08:00-09:00
+2025-02-10 00:19:38,365 - INFO - Period 7: Discharging on Tuesday at 09:00-10:00
+2025-02-10 00:19:38,365 - INFO - Period 8: Discharging on Tuesday at 10:00-11:00
+2025-02-10 00:19:38,365 - ERROR - Unexpected error in schedule update: 'ScheduleManager' object has no attribute '_combine_flags'
+2025-02-10 00:19:38,365 - ERROR - Schedule update failed
+2025-02-10 00:21:49,943 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 00:21:53,685 - INFO - Updating schedule at 2025-02-10 00:21:53.683388+01:00
+2025-02-10 00:21:53,685 - INFO - 
 === Current Schedule ===
-2025-02-09 16:23:06,579 - INFO - 
+2025-02-10 00:21:53,686 - INFO - Period 1: Discharging on Monday at 00:00-04:00
+2025-02-10 00:21:53,686 - INFO - Period 2: Discharging on Monday at 04:00-10:00
+2025-02-10 00:21:53,828 - INFO - 
 === New Periods for Tomorrow ===
-2025-02-09 16:23:06,580 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:23:06,580 - INFO - Period 2: Charging on Monday at 00:00-01:00
-2025-02-09 16:23:06,580 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:23:06,580 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:23:06,580 - INFO - Period 5: Discharging on Monday at 21:00-22:00
-2025-02-09 16:23:06,581 - INFO - Period 6: Discharging on Monday at 20:00-21:00
-2025-02-09 16:23:06,581 - INFO - Period 7: Discharging on Monday at 19:00-20:00
-2025-02-09 16:23:06,581 - INFO - Period 8: Discharging on Monday at 10:00-11:00
-2025-02-09 16:23:06,581 - INFO - 
+2025-02-10 00:21:53,828 - INFO - Period 1: Charging on Tuesday at 01:00-02:00
+2025-02-10 00:21:53,828 - INFO - Period 2: Charging on Tuesday at 02:00-03:00
+2025-02-10 00:21:53,828 - INFO - Period 3: Charging on Tuesday at 03:00-04:00
+2025-02-10 00:21:53,828 - INFO - Period 4: Charging on Tuesday at 04:00-05:00
+2025-02-10 00:21:53,828 - INFO - Period 5: Discharging on Tuesday at 07:00-08:00
+2025-02-10 00:21:53,828 - INFO - Period 6: Discharging on Tuesday at 08:00-09:00
+2025-02-10 00:21:53,828 - INFO - Period 7: Discharging on Tuesday at 09:00-10:00
+2025-02-10 00:21:53,828 - INFO - Period 8: Discharging on Tuesday at 10:00-11:00
+2025-02-10 00:21:53,828 - INFO - 
 === Final Schedule ===
-2025-02-09 16:23:06,581 - INFO - Period 1: Charging on Monday at 00:00-01:00
-2025-02-09 16:23:06,581 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:23:06,581 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:23:06,581 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:23:06,581 - INFO - Period 5: Discharging on Monday at 10:00-11:00
-2025-02-09 16:23:06,581 - INFO - Period 6: Discharging on Monday at 19:00-20:00
-2025-02-09 16:23:06,582 - INFO - Period 7: Discharging on Monday at 20:00-21:00
-2025-02-09 16:23:06,582 - INFO - Period 8: Discharging on Monday at 21:00-22:00
-2025-02-09 16:23:06,582 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:06,582 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:23:06,582 - INFO - Successfully updated battery schedule
-2025-02-09 16:23:06,582 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:56,369 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:56,370 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:56,370 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:56,371 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:23:56,372 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:56,373 - INFO - Updating schedule at 2025-02-09 16:23:56.373819+01:00
-2025-02-09 16:23:56,373 - INFO - 
+2025-02-10 00:21:53,828 - INFO - Period 1: Discharging on Monday at 00:00-04:00
+2025-02-10 00:21:53,828 - INFO - Period 2: Charging on Tuesday at 01:00-02:00
+2025-02-10 00:21:53,828 - INFO - Period 3: Charging on Tuesday at 02:00-03:00
+2025-02-10 00:21:53,828 - INFO - Period 4: Charging on Tuesday at 03:00-04:00
+2025-02-10 00:21:53,829 - INFO - Period 5: Charging on Tuesday at 04:00-05:00
+2025-02-10 00:21:53,829 - INFO - Period 6: Discharging on Monday at 04:00-10:00
+2025-02-10 00:21:53,829 - INFO - Period 7: Discharging on Tuesday at 07:00-08:00
+2025-02-10 00:21:53,829 - INFO - Period 8: Discharging on Tuesday at 08:00-09:00
+2025-02-10 00:21:53,829 - INFO - Period 9: Discharging on Tuesday at 09:00-10:00
+2025-02-10 00:21:53,829 - INFO - Period 10: Discharging on Tuesday at 10:00-11:00
+2025-02-10 00:21:53,829 - INFO - Successfully updated battery schedule
+2025-02-10 00:21:53,829 - INFO - Schedule update completed successfully
+2025-02-10 00:25:45,437 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 00:25:49,414 - INFO - Updating schedule at 2025-02-10 00:25:49.412259+01:00
+2025-02-10 00:25:49,415 - INFO - 
 === Current Schedule ===
-2025-02-09 16:23:56,376 - INFO - 
+2025-02-10 00:25:49,858 - INFO - 
 === New Periods for Tomorrow ===
-2025-02-09 16:23:56,376 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:23:56,376 - INFO - Period 2: Charging on Monday at 00:00-01:00
-2025-02-09 16:23:56,377 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:23:56,377 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:23:56,377 - INFO - Period 5: Discharging on Monday at 21:00-22:00
-2025-02-09 16:23:56,377 - INFO - Period 6: Discharging on Monday at 20:00-21:00
-2025-02-09 16:23:56,377 - INFO - Period 7: Discharging on Monday at 19:00-20:00
-2025-02-09 16:23:56,377 - INFO - Period 8: Discharging on Monday at 10:00-11:00
-2025-02-09 16:23:56,377 - INFO - 
+2025-02-10 00:25:49,858 - INFO - Period 1: Charging on Tuesday at 01:00-02:00
+2025-02-10 00:25:49,858 - INFO - Period 2: Charging on Tuesday at 02:00-03:00
+2025-02-10 00:25:49,858 - INFO - Period 3: Charging on Tuesday at 03:00-04:00
+2025-02-10 00:25:49,858 - INFO - Period 4: Charging on Tuesday at 04:00-05:00
+2025-02-10 00:25:49,858 - INFO - Period 5: Discharging on Tuesday at 07:00-08:00
+2025-02-10 00:25:49,859 - INFO - Period 6: Discharging on Tuesday at 08:00-09:00
+2025-02-10 00:25:49,859 - INFO - Period 7: Discharging on Tuesday at 09:00-10:00
+2025-02-10 00:25:49,859 - INFO - Period 8: Discharging on Tuesday at 10:00-11:00
+2025-02-10 00:25:49,859 - INFO - 
 === Final Schedule ===
-2025-02-09 16:23:56,377 - INFO - Period 1: Charging on Monday at 00:00-01:00
-2025-02-09 16:23:56,378 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:23:56,378 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:23:56,378 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:23:56,378 - INFO - Period 5: Discharging on Monday at 10:00-11:00
-2025-02-09 16:23:56,378 - INFO - Period 6: Discharging on Monday at 19:00-20:00
-2025-02-09 16:23:56,378 - INFO - Period 7: Discharging on Monday at 20:00-21:00
-2025-02-09 16:23:56,378 - INFO - Period 8: Discharging on Monday at 21:00-22:00
-2025-02-09 16:23:56,378 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:23:56,378 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:23:56,379 - INFO - Successfully updated battery schedule
-2025-02-09 16:23:56,379 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:26:07,977 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:26:07,978 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:26:07,978 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:26:07,979 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:26:07,979 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:26:07,980 - INFO - Updating schedule at 2025-02-09 16:26:07.980107+01:00
-2025-02-09 16:26:07,980 - INFO - 
-=== Current Schedule ===
-2025-02-09 16:26:07,984 - INFO - 
-=== New Periods for Tomorrow ===
-2025-02-09 16:26:07,984 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:26:07,984 - INFO - Period 2: Charging on Monday at 00:00-01:00
-2025-02-09 16:26:07,984 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:26:07,984 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:26:07,984 - INFO - Period 5: Discharging on Monday at 21:00-22:00
-2025-02-09 16:26:07,985 - INFO - Period 6: Discharging on Monday at 20:00-21:00
-2025-02-09 16:26:07,985 - INFO - Period 7: Discharging on Monday at 19:00-20:00
-2025-02-09 16:26:07,985 - INFO - Period 8: Discharging on Monday at 10:00-11:00
-2025-02-09 16:26:07,985 - INFO - 
-=== Final Schedule ===
-2025-02-09 16:26:07,985 - INFO - Period 1: Charging on Monday at 00:00-01:00
-2025-02-09 16:26:07,985 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:26:07,986 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:26:07,986 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:26:07,986 - INFO - Period 5: Discharging on Monday at 10:00-11:00
-2025-02-09 16:26:07,986 - INFO - Period 6: Discharging on Monday at 19:00-20:00
-2025-02-09 16:26:07,986 - INFO - Period 7: Discharging on Monday at 20:00-21:00
-2025-02-09 16:26:07,986 - INFO - Period 8: Discharging on Monday at 21:00-22:00
-2025-02-09 16:26:07,986 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:26:07,986 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:26:07,986 - INFO - Successfully updated battery schedule
-2025-02-09 16:26:07,986 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:28:42,976 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:28:42,977 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:28:42,978 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:28:42,978 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:28:42,983 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:28:42,983 - INFO - Updating schedule at 2025-02-09 16:28:42.983463+01:00
-2025-02-09 16:28:42,983 - INFO - 
-=== Current Schedule ===
-2025-02-09 16:28:42,987 - INFO - 
-=== New Periods for Tomorrow ===
-2025-02-09 16:28:42,987 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:28:42,987 - INFO - Period 2: Charging on Monday at 00:00-01:00
-2025-02-09 16:28:42,987 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:28:42,988 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:28:42,988 - INFO - Period 5: Discharging on Monday at 21:00-22:00
-2025-02-09 16:28:42,988 - INFO - Period 6: Discharging on Monday at 20:00-21:00
-2025-02-09 16:28:42,988 - INFO - Period 7: Discharging on Monday at 19:00-20:00
-2025-02-09 16:28:42,988 - INFO - Period 8: Discharging on Monday at 10:00-11:00
-2025-02-09 16:28:42,988 - INFO - 
-=== Final Schedule ===
-2025-02-09 16:28:42,989 - INFO - Period 1: Charging on Monday at 00:00-01:00
-2025-02-09 16:28:42,989 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:28:42,989 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:28:42,989 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:28:42,989 - INFO - Period 5: Discharging on Monday at 10:00-11:00
-2025-02-09 16:28:42,989 - INFO - Period 6: Discharging on Monday at 19:00-20:00
-2025-02-09 16:28:42,989 - INFO - Period 7: Discharging on Monday at 20:00-21:00
-2025-02-09 16:28:42,990 - INFO - Period 8: Discharging on Monday at 21:00-22:00
-2025-02-09 16:28:42,990 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:28:42,990 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:28:42,990 - INFO - Successfully updated battery schedule
-2025-02-09 16:28:42,990 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:30:59,369 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:30:59,370 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:30:59,371 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:30:59,371 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:30:59,375 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:30:59,376 - INFO - Updating schedule at 2025-02-09 16:30:59.376885+01:00
-2025-02-09 16:30:59,376 - INFO - 
-=== Current Schedule ===
-2025-02-09 16:30:59,379 - INFO - 
-=== New Periods for Tomorrow ===
-2025-02-09 16:30:59,379 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:30:59,380 - INFO - Period 2: Charging on Monday at 00:00-01:00
-2025-02-09 16:30:59,380 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:30:59,380 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:30:59,380 - INFO - Period 5: Discharging on Monday at 21:00-22:00
-2025-02-09 16:30:59,380 - INFO - Period 6: Discharging on Monday at 20:00-21:00
-2025-02-09 16:30:59,381 - INFO - Period 7: Discharging on Monday at 19:00-20:00
-2025-02-09 16:30:59,381 - INFO - Period 8: Discharging on Monday at 10:00-11:00
-2025-02-09 16:30:59,381 - INFO - 
-=== Final Schedule ===
-2025-02-09 16:30:59,381 - INFO - Period 1: Charging on Monday at 00:00-01:00
-2025-02-09 16:30:59,381 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:30:59,381 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:30:59,381 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:30:59,381 - INFO - Period 5: Discharging on Monday at 10:00-11:00
-2025-02-09 16:30:59,381 - INFO - Period 6: Discharging on Monday at 19:00-20:00
-2025-02-09 16:30:59,381 - INFO - Period 7: Discharging on Monday at 20:00-21:00
-2025-02-09 16:30:59,381 - INFO - Period 8: Discharging on Monday at 21:00-22:00
-2025-02-09 16:30:59,381 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:30:59,381 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:30:59,381 - INFO - Successfully updated battery schedule
-2025-02-09 16:30:59,382 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:39:43,751 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:39:43,751 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:39:43,752 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:39:43,752 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:39:43,756 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:39:43,756 - INFO - Updating schedule at 2025-02-09 16:39:43.756806+01:00
-2025-02-09 16:39:43,757 - INFO - 
-=== Current Schedule ===
-2025-02-09 16:39:43,760 - INFO - 
-=== New Periods for Tomorrow ===
-2025-02-09 16:39:43,760 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:39:43,760 - INFO - Period 2: Charging on Monday at 00:00-01:00
-2025-02-09 16:39:43,760 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:39:43,761 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:39:43,761 - INFO - Period 5: Discharging on Monday at 21:00-22:00
-2025-02-09 16:39:43,761 - INFO - Period 6: Discharging on Monday at 20:00-21:00
-2025-02-09 16:39:43,761 - INFO - Period 7: Discharging on Monday at 19:00-20:00
-2025-02-09 16:39:43,761 - INFO - Period 8: Discharging on Monday at 10:00-11:00
-2025-02-09 16:39:43,761 - INFO - 
-=== Final Schedule ===
-2025-02-09 16:39:43,762 - INFO - Period 1: Charging on Monday at 00:00-01:00
-2025-02-09 16:39:43,762 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:39:43,762 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:39:43,762 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:39:43,762 - INFO - Period 5: Discharging on Monday at 10:00-11:00
-2025-02-09 16:39:43,762 - INFO - Period 6: Discharging on Monday at 19:00-20:00
-2025-02-09 16:39:43,763 - INFO - Period 7: Discharging on Monday at 20:00-21:00
-2025-02-09 16:39:43,763 - INFO - Period 8: Discharging on Monday at 21:00-22:00
-2025-02-09 16:39:43,763 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:39:43,763 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:39:43,763 - INFO - Successfully updated battery schedule
-2025-02-09 16:39:43,764 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:41:52,168 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:41:52,169 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:41:52,169 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:41:52,170 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:41:52,172 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:41:52,173 - INFO - Updating schedule at 2025-02-09 16:41:52.173459+01:00
-2025-02-09 16:41:52,173 - INFO - 
-=== Current Schedule ===
-2025-02-09 16:41:52,176 - INFO - 
-=== New Periods for Tomorrow ===
-2025-02-09 16:41:52,176 - INFO - Period 1: Charging on Monday at 01:00-02:00
-2025-02-09 16:41:52,176 - INFO - Period 2: Charging on Monday at 00:00-01:00
-2025-02-09 16:41:52,176 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:41:52,176 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:41:52,177 - INFO - Period 5: Discharging on Monday at 21:00-22:00
-2025-02-09 16:41:52,177 - INFO - Period 6: Discharging on Monday at 20:00-21:00
-2025-02-09 16:41:52,177 - INFO - Period 7: Discharging on Monday at 19:00-20:00
-2025-02-09 16:41:52,177 - INFO - Period 8: Discharging on Monday at 10:00-11:00
-2025-02-09 16:41:52,177 - INFO - 
-=== Final Schedule ===
-2025-02-09 16:41:52,177 - INFO - Period 1: Charging on Monday at 00:00-01:00
-2025-02-09 16:41:52,177 - INFO - Period 2: Charging on Monday at 01:00-02:00
-2025-02-09 16:41:52,177 - INFO - Period 3: Charging on Monday at 02:00-03:00
-2025-02-09 16:41:52,177 - INFO - Period 4: Charging on Monday at 03:00-04:00
-2025-02-09 16:41:52,177 - INFO - Period 5: Discharging on Monday at 10:00-11:00
-2025-02-09 16:41:52,177 - INFO - Period 6: Discharging on Monday at 19:00-20:00
-2025-02-09 16:41:52,178 - INFO - Period 7: Discharging on Monday at 20:00-21:00
-2025-02-09 16:41:52,178 - INFO - Period 8: Discharging on Monday at 21:00-22:00
-2025-02-09 16:41:52,178 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:41:52,178 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:41:52,178 - INFO - Successfully updated battery schedule
-2025-02-09 16:41:52,178 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:44:53,274 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:44:53,274 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:44:53,274 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:44:53,274 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:51:00,404 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:51:00,404 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:51:00,405 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:51:00,405 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:52:09,266 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:52:09,267 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:52:09,268 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:52:09,269 - INFO - Successfully wrote schedule to battery
-2025-02-09 16:56:17,104 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:56:17,104 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:56:17,105 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 16:56:17,105 - INFO - Successfully wrote schedule to battery
-2025-02-09 17:03:33,215 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:03:33,216 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:03:33,216 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:03:33,217 - INFO - Successfully wrote schedule to battery
-2025-02-09 17:06:01,615 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:06:01,616 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:06:01,616 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:06:01,617 - INFO - Successfully wrote schedule to battery
-2025-02-09 17:15:32,003 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:15:32,003 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:15:32,003 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:15:32,003 - INFO - Successfully wrote schedule to battery
-2025-02-09 17:17:26,682 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:17:26,682 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:17:26,683 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:17:26,683 - INFO - Successfully wrote schedule to battery
-2025-02-09 17:21:46,218 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:21:46,219 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:21:46,219 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:21:46,219 - INFO - Successfully wrote schedule to battery
-2025-02-09 17:23:12,682 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:23:12,682 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:23:12,683 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:23:12,683 - INFO - Successfully wrote schedule to battery
-2025-02-09 17:23:38,186 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:23:38,187 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:23:38,188 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:23:38,188 - INFO - Successfully wrote schedule to battery
-2025-02-09 17:26:57,979 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:26:57,979 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:26:57,980 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 17:26:57,980 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:09:34,513 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:09:34,513 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:09:34,514 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:09:34,514 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:11:07,431 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:11:07,432 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:11:07,432 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:11:07,433 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:24:14,493 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:24:14,494 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:24:14,494 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:24:14,495 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:25:12,397 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:25:12,398 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:25:12,398 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:25:12,399 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:26:13,070 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:26:13,071 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:26:13,072 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:26:13,072 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:32:03,281 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:32:03,281 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:32:03,281 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:32:03,281 - ERROR - Error writing schedule: Data must be exactly 43 values, got 40
-2025-02-09 21:33:59,160 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:33:59,163 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:33:59,164 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:33:59,164 - ERROR - Error writing schedule: Data must be exactly 43 values, got 40
-2025-02-09 21:36:46,703 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:36:46,703 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:36:46,703 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:36:46,703 - ERROR - Error writing schedule: Data must be exactly 43 values, got 40
-2025-02-09 21:39:53,175 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:39:53,175 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:39:53,176 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:39:53,176 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:39:53,177 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:39:53,177 - ERROR - Error writing schedule: Data must be exactly 43 values, got 5
-2025-02-09 21:39:53,177 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:39:53,178 - ERROR - Error writing schedule: Data must be exactly 43 values, got 44
-2025-02-09 21:41:09,060 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:41:09,060 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:41:09,060 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:41:09,061 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:41:09,061 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:41:09,061 - ERROR - Error writing schedule: Data must be exactly 43 values, got 5
-2025-02-09 21:41:09,062 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:41:09,062 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:42:28,071 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:42:28,071 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:42:28,071 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:42:28,071 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:42:28,071 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:42:28,071 - ERROR - Error writing schedule: Data must be exactly 43 values, got 5
-2025-02-09 21:42:28,088 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:42:28,088 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:45:52,866 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:45:52,866 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:45:52,866 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:45:52,880 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:45:52,880 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:45:52,881 - ERROR - Error writing schedule: Data must be exactly 43 values, got 5
-2025-02-09 21:45:52,881 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:45:52,881 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:48:26,261 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:48:26,261 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:48:26,262 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:48:26,262 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:48:26,263 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:48:26,263 - ERROR - Error writing schedule: Data must be exactly 43 values, got 5
-2025-02-09 21:48:26,265 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:48:26,265 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:49:43,385 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:49:43,385 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:49:43,386 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:49:43,386 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:49:43,386 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:49:43,386 - ERROR - Error writing schedule: Data must be exactly 43 values, got 5
-2025-02-09 21:49:43,388 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:49:43,388 - INFO - Successfully wrote schedule to battery
-2025-02-09 21:50:25,777 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:50:25,778 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:50:25,778 - ERROR - Connection error: Failed to connect to battery
-2025-02-09 21:50:25,778 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:50:25,779 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:50:25,779 - ERROR - Error writing schedule: Data must be exactly 43 values, got 5
-2025-02-09 21:50:25,782 - INFO - Successfully connected to battery at 192.168.1.100:502
-2025-02-09 21:50:25,782 - INFO - Successfully wrote schedule to battery
+2025-02-10 00:25:49,859 - INFO - Period 1: Charging on Tuesday at 01:00-02:00
+2025-02-10 00:25:49,859 - INFO - Period 2: Charging on Tuesday at 02:00-03:00
+2025-02-10 00:25:49,859 - INFO - Period 3: Charging on Tuesday at 03:00-04:00
+2025-02-10 00:25:49,859 - INFO - Period 4: Charging on Tuesday at 04:00-05:00
+2025-02-10 00:25:49,859 - INFO - Period 5: Discharging on Tuesday at 07:00-08:00
+2025-02-10 00:25:49,859 - INFO - Period 6: Discharging on Tuesday at 08:00-09:00
+2025-02-10 00:25:49,859 - INFO - Period 7: Discharging on Tuesday at 09:00-10:00
+2025-02-10 00:25:49,859 - INFO - Period 8: Discharging on Tuesday at 10:00-11:00
+2025-02-10 00:25:49,859 - INFO - Successfully updated battery schedule
+2025-02-10 00:25:49,859 - INFO - Schedule update completed successfully

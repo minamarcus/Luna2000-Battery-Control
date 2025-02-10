@@ -22,7 +22,7 @@ class PriceFetcher:
     def get_prices(self) -> Dict[str, List[Dict]]:
         """Get electricity prices for today and tomorrow."""
         now = datetime.now(self.stockholm_tz)
-        tomorrow = now + timedelta(days=1)
+        tomorrow = now + timedelta(days=0)
         
         tomorrow_data = self._fetch_price_data(tomorrow)
         if not tomorrow_data:

@@ -1,4 +1,3 @@
-from datetime import datetime
 import sys
 from config import logger, BATTERY_HOST
 from schedule_manager import ScheduleManager

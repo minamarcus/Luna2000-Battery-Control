@@ -20,6 +20,53 @@ class BatteryManager:
             logger.error(f"Connection error: {e}")
             return None
 
+    def _decode_flags(self, register_value: int) -> tuple:
+        """
+        Decode the combined flags from a register value.
+        - Lower byte (bits 0-7): charge/discharge flag (0=charge, 1=discharge)
+        - Upper byte (bits 8-15): day bitmap (bit 0=Sunday, bit 1=Monday, etc.)
+        """
+        charge_flag = register_value & 0xFF  # Get lower byte
+        day_bits = (register_value >> 8) & 0xFF  # Get upper byte
+        return charge_flag, day_bits
+
+    def _encode_flags(self, charge_flag: int, day_bits: int) -> int:
+        """
+        Encode charge flag and day bits into a single register value.
+        """
+        return ((day_bits & 0xFF) << 8) | (charge_flag & 0xFF)
+
+    def _parse_schedule(self, data: List[int]) -> Dict:
+        """Parse raw register data into a structured format."""
+        num_periods = data[0]
+        periods = []
+
+        for i in range(num_periods):
+            base_idx = 1 + (i * 3)  # Changed from 4 to 3 as flags are combined
+            if base_idx + 2 >= len(data):
+                break
+
+            start_time = data[base_idx]
+            end_time = data[base_idx + 1]
+            combined_flags = data[base_idx + 2]
+            
+            # Decode the combined flags
+            charge_flag, day_bits = self._decode_flags(combined_flags)
+
+            periods.append({
+                'start_time': start_time,
+                'end_time': end_time,
+                'charge_flag': charge_flag,
+                'days': day_bits,
+                'is_charging': charge_flag == 0
+            })
+
+        return {
+            'num_periods': num_periods,
+            'periods': periods,
+            'raw_data': data
+        }
+
     def read_schedule(self) -> Optional[Dict]:
         """Read and parse the battery schedule."""
         client = None
@@ -48,34 +95,25 @@ class BatteryManager:
             if client:
                 client.close()
 
-    def _parse_schedule(self, data: List[int]) -> Dict:
-        """Parse raw register data into a structured format."""
-        num_periods = data[0]
-        periods = []
-
-        for i in range(num_periods):
-            base_idx = 1 + (i * 4)
-            if base_idx + 3 >= len(data):
-                break
-
-            start_time = data[base_idx]
-            end_time = data[base_idx + 1]
-            charge_flag = data[base_idx + 2]
-            days_bits = data[base_idx + 3]
-
-            periods.append({
-                'start_time': start_time,
-                'end_time': end_time,
-                'charge_flag': charge_flag,
-                'days': days_bits,
-                'is_charging': charge_flag == 0
-            })
-
-        return {
-            'num_periods': num_periods,
-            'periods': periods,
-            'raw_data': data
-        }
+    def create_register_data(self, periods: List[Dict]) -> List[int]:
+        """Create register data format from periods."""
+        data = [len(periods)]  # Number of periods
+        
+        for period in sorted(periods, key=lambda x: x['start_time']):
+            combined_flags = self._encode_flags(
+                charge_flag=0 if period['is_charging'] else 1,
+                day_bits=period['days']
+            )
+            
+            data.extend([
+                period['start_time'],
+                period['end_time'],
+                combined_flags
+            ])
+            
+        # Pad with zeros to reach 43 values
+        data.extend([0] * (43 - len(data)))
+        return data
 
     def write_schedule(self, data: List[int]) -> bool:
         """Write schedule to battery."""
