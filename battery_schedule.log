@@ -82,3 +82,73 @@
 2025-02-10 21:56:31,593 - INFO - Successfully wrote schedule to battery
 2025-02-10 21:56:31,594 - INFO - Successfully updated battery schedule
 2025-02-10 21:56:31,595 - INFO - Schedule update completed successfully
+2025-02-10 22:49:38,027 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 22:49:41,438 - INFO - Updating schedule at 2025-02-10 22:49:41.436719+01:00
+2025-02-10 22:49:41,440 - INFO - 
+=== Current Schedule ===
+2025-02-10 22:49:41,967 - INFO - Preserving today's schedule based on price comparison
+2025-02-10 22:49:41,980 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-10 22:49:41,980 - INFO - Period 1: Charging on Tuesday at 00:00-01:00
+2025-02-10 22:49:41,980 - INFO - Period 2: Charging on Tuesday at 02:00-05:00
+2025-02-10 22:49:41,980 - INFO - Period 3: Discharging on Tuesday at 07:00-11:00
+2025-02-10 22:49:41,980 - INFO - 
+=== Final Schedule ===
+2025-02-10 22:49:41,980 - INFO - Period 1: Charging on Tuesday at 00:00-01:00
+2025-02-10 22:49:41,980 - INFO - Period 2: Charging on Tuesday at 02:00-05:00
+2025-02-10 22:49:41,980 - INFO - Period 3: Discharging on Tuesday at 07:00-11:00
+2025-02-10 22:49:41,980 - INFO - Successfully updated battery schedule
+2025-02-10 22:49:41,980 - INFO - Schedule update completed successfully
+2025-02-10 23:24:05,244 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 23:24:08,481 - INFO - Updating schedule at 2025-02-10 23:24:08.479978+01:00
+2025-02-10 23:24:08,481 - INFO - 
+=== Current Schedule ===
+2025-02-10 23:24:08,807 - INFO - Preserving today's schedule based on price comparison
+2025-02-10 23:24:08,821 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-10 23:24:08,821 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-10 23:24:08,821 - INFO - Period 2: Charging on Tuesday at 23:00-00:00
+2025-02-10 23:24:08,821 - INFO - Period 3: Discharging on Tuesday at 07:00-11:00
+2025-02-10 23:24:08,821 - INFO - 
+=== Final Schedule ===
+2025-02-10 23:24:08,821 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-10 23:24:08,821 - INFO - Period 2: Discharging on Tuesday at 07:00-11:00
+2025-02-10 23:24:08,821 - INFO - Period 3: Charging on Tuesday at 23:00-00:00
+2025-02-10 23:24:08,822 - INFO - Successfully updated battery schedule
+2025-02-10 23:24:08,822 - INFO - Schedule update completed successfully
+2025-02-10 23:45:29,354 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 23:45:32,930 - INFO - Updating schedule at 2025-02-10 23:45:32.929532+01:00
+2025-02-10 23:45:32,930 - INFO - 
+=== Current Schedule ===
+2025-02-10 23:45:33,309 - INFO - Preserving today's schedule based on price comparison
+2025-02-10 23:45:33,320 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-10 23:45:33,320 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-10 23:45:33,321 - INFO - Period 2: Charging on Tuesday at 23:00-00:00
+2025-02-10 23:45:33,321 - INFO - Period 3: Discharging on Tuesday at 07:00-11:00
+2025-02-10 23:45:33,321 - INFO - 
+=== Final Schedule ===
+2025-02-10 23:45:33,321 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-10 23:45:33,321 - INFO - Period 2: Discharging on Tuesday at 07:00-11:00
+2025-02-10 23:45:33,321 - INFO - Period 3: Charging on Tuesday at 23:00-00:00
+2025-02-10 23:45:33,321 - INFO - Successfully updated battery schedule
+2025-02-10 23:45:33,321 - INFO - Schedule update completed successfully
+2025-02-10 23:46:21,181 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 23:46:24,689 - INFO - Updating schedule at 2025-02-10 23:46:24.687984+01:00
+2025-02-10 23:46:24,689 - INFO - 
+=== Current Schedule ===
+2025-02-10 23:46:24,907 - INFO - Preserving today's schedule based on price comparison
+2025-02-10 23:46:24,917 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-10 23:46:24,917 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-10 23:46:24,917 - INFO - Period 2: Charging on Tuesday at 23:00-00:00
+2025-02-10 23:46:24,917 - INFO - Period 3: Discharging on Tuesday at 07:00-11:00
+2025-02-10 23:46:24,917 - INFO - 
+=== Final Schedule ===
+2025-02-10 23:46:24,917 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-10 23:46:24,917 - INFO - Period 2: Discharging on Tuesday at 07:00-11:00
+2025-02-10 23:46:24,917 - INFO - Period 3: Charging on Tuesday at 23:00-00:00
+2025-02-10 23:46:24,925 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-10 23:46:28,621 - INFO - Successfully wrote schedule to battery
+2025-02-10 23:46:28,622 - INFO - Successfully updated battery schedule
+2025-02-10 23:46:28,623 - INFO - Schedule update completed successfully

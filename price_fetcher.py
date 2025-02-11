@@ -22,21 +22,38 @@ class PriceFetcher:
     def get_prices(self) -> Dict[str, List[Dict]]:
         """Get electricity prices for today and tomorrow."""
         now = datetime.now(self.stockholm_tz)
-        tomorrow = now + timedelta(days=0)
+        today = now
+        tomorrow = now + timedelta(days=1)
         
+        today_data = self._fetch_price_data(today)
         tomorrow_data = self._fetch_price_data(tomorrow)
-        if not tomorrow_data:
-            return {'tomorrow': None}
-
-        processed_data = []
-        for item in tomorrow_data:
-            time_start = datetime.fromisoformat(item['time_start'].replace('Z', '+00:00'))
-            time_start = time_start.astimezone(self.stockholm_tz)
+        
+        result = {}
+        
+        if today_data:
+            processed_today = []
+            for item in today_data:
+                time_start = datetime.fromisoformat(item['time_start'].replace('Z', '+00:00'))
+                time_start = time_start.astimezone(self.stockholm_tz)
+                
+                processed_today.append({
+                    'hour': time_start.hour,
+                    'time_start': time_start,
+                    'SEK_per_kWh': item['SEK_per_kWh']
+                })
+            result['today'] = sorted(processed_today, key=lambda x: x['hour'])
             
-            processed_data.append({
-                'hour': time_start.hour,
-                'time_start': time_start,
-                'SEK_per_kWh': item['SEK_per_kWh']
-            })
-
-        return {'tomorrow': sorted(processed_data, key=lambda x: x['hour'])}
+        if tomorrow_data:
+            processed_tomorrow = []
+            for item in tomorrow_data:
+                time_start = datetime.fromisoformat(item['time_start'].replace('Z', '+00:00'))
+                time_start = time_start.astimezone(self.stockholm_tz)
+                
+                processed_tomorrow.append({
+                    'hour': time_start.hour,
+                    'time_start': time_start,
+                    'SEK_per_kWh': item['SEK_per_kWh']
+                })
+            result['tomorrow'] = sorted(processed_tomorrow, key=lambda x: x['hour'])
+            
+        return result

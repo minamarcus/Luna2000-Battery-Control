@@ -107,44 +107,36 @@ class ScheduleManager:
     def _process_periods(self, df: pd.DataFrame, is_charging: bool, 
                         day_bit: int) -> List[Dict]:
         """Process and create periods for either charging or discharging."""
-        periods = []
-        used_hours = set()
+        # Sort hours by price (ascending for charging, descending for discharging)
+        sorted_df = df.sort_values('SEK_per_kWh', 
+                                 ascending=is_charging)
         
-        for _, row in df.iterrows():
-            if len(periods) >= 4:
-                break
-                
+        # Select the best hours (up to 4)
+        selected_hours = []
+        for _, row in sorted_df.iterrows():
             hour = normalize_hour(row['hour'])
-            if hour in used_hours:
-                continue
-                
-            # Find contiguous block
-            potential_block = [hour]
-            for offset in [-1, 1]:
-                check_hour = normalize_hour(hour + offset)
-                if (check_hour in df['hour'].values and 
-                    check_hour not in used_hours):
-                    if (is_charging and is_night_hour(check_hour)) or \
-                       (not is_charging and is_day_hour(check_hour)):
-                        potential_block.append(check_hour)
-                    
-            potential_block.sort()
-            max_hours = min(len(potential_block), 4 - len(periods))
-            
-            for block_hour in potential_block[:max_hours]:
-                if block_hour not in used_hours:
-                    end_hour = (block_hour + 1) % 24
-                    periods.append(
-                        self.create_period(
-                            start_hour=block_hour,
-                            end_hour=end_hour,
-                            is_charging=is_charging,
-                            day_bit=day_bit
-                        )
-                    )
-                    used_hours.add(block_hour)
+            if len(selected_hours) >= 4:
+                break
+            if ((is_charging and is_night_hour(hour)) or 
+                (not is_charging and is_day_hour(hour))):
+                selected_hours.append(hour)
         
-        # Combine consecutive periods before returning
+        # Sort hours chronologically
+        selected_hours.sort()
+        
+        # Create initial periods (one hour each)
+        periods = []
+        for hour in selected_hours:
+            periods.append(
+                self.create_period(
+                    start_hour=hour,
+                    end_hour=(hour + 1) % 24,
+                    is_charging=is_charging,
+                    day_bit=day_bit
+                )
+            )
+        
+        # Combine consecutive periods
         return self._combine_consecutive_periods(periods)
 
     def clean_schedule(self, schedule: Dict, current_date: datetime) -> List[Dict]:
@@ -213,12 +205,55 @@ class ScheduleManager:
         """
         return days_bits + (256 if charge_flag == 1 else 0)
 
+    def should_preserve_today_schedule(self, today_periods: List[Dict], 
+                                    today_prices: List[Dict], 
+                                    tomorrow_prices: List[Dict]) -> bool:
+        """Determine if today's discharge periods should be preserved based on price comparison."""
+        now = datetime.now(self.stockholm_tz)
+        current_hour = now.hour
+        
+        # Get remaining discharge periods for today
+        remaining_periods = [p for p in today_periods 
+                           if not p['is_charging'] and 
+                           p['start_time'] // 60 >= current_hour]
+        
+        if not remaining_periods:
+            return True
+            
+        # Calculate average price for remaining discharge periods today
+        today_discharge_hours = set()
+        for period in remaining_periods:
+            start_hour = period['start_time'] // 60
+            end_hour = period['end_time'] // 60
+            if end_hour <= start_hour:
+                end_hour += 24
+            today_discharge_hours.update(range(start_hour, end_hour))
+        
+        today_prices_dict = {p['hour']: p['SEK_per_kWh'] for p in today_prices}
+        today_discharge_prices = [today_prices_dict[h % 24] 
+                                for h in today_discharge_hours 
+                                if h % 24 in today_prices_dict]
+        
+        if not today_discharge_prices:
+            return True
+            
+        avg_today_price = sum(today_discharge_prices) / len(today_discharge_prices)
+        
+        # Find top 4 most expensive hours for tomorrow
+        tomorrow_prices_sorted = sorted(tomorrow_prices, 
+                                      key=lambda x: x['SEK_per_kWh'], 
+                                      reverse=True)
+        top_tomorrow_prices = tomorrow_prices_sorted[:4]
+        avg_tomorrow_top_price = sum(p['SEK_per_kWh'] 
+                                   for p in top_tomorrow_prices) / len(top_tomorrow_prices)
+        
+        # If tomorrow's prices are significantly higher, don't preserve today's schedule
+        return avg_tomorrow_top_price < (avg_today_price * 1.5)
+
     def update_schedule(self) -> bool:
         """Main function to update the schedule."""
         try:
             current_schedule = self.battery.read_schedule()
-            print("current_schedule")
-            print(current_schedule)
             if not current_schedule:
                 logger.error("Failed to read current schedule")
                 return False
@@ -228,23 +263,37 @@ class ScheduleManager:
             
             logger.info(f"Updating schedule at {now}")
             
-            cleaned_periods = self.clean_schedule(current_schedule, now)
-            self.log_schedule(cleaned_periods, "Current Schedule")
+            # Get current schedule
+            current_periods = self.clean_schedule(current_schedule, now)
+            self.log_schedule(current_periods, "Current Schedule")
             
-            # Get prices for tomorrow
+            # Get prices for today and tomorrow
             prices = self.price_fetcher.get_prices()
-            if not prices.get('tomorrow'):
-                logger.error("Failed to fetch tomorrow's prices")
+            if not prices.get('today') or not prices.get('tomorrow'):
+                logger.error("Failed to fetch prices")
                 return False
             
-            # Find optimal periods
+            # Determine if we should keep today's schedule
+            preserve_today = self.should_preserve_today_schedule(
+                current_periods, 
+                prices['today'], 
+                prices['tomorrow']
+            )
+            
+            if preserve_today:
+                logger.info("Preserving today's schedule based on price comparison")
+            else:
+                logger.info("Clearing today's schedule due to better prices tomorrow")
+                current_periods = []
+            
+            # Find optimal periods for tomorrow
             charging_periods, discharging_periods = self.find_optimal_periods(
                 prices['tomorrow'], tomorrow)
             new_periods = charging_periods + discharging_periods
             self.log_schedule(new_periods, "New Periods for Tomorrow")
             
             # Merge and check for overlaps
-            all_periods = sorted(cleaned_periods + new_periods, 
+            all_periods = sorted(current_periods + new_periods, 
                                key=lambda x: x['start_time'])
             final_periods = []
             
@@ -263,7 +312,6 @@ class ScheduleManager:
             
             # Write to battery
             success = self.battery.write_schedule(new_register_data)
-            success = True
             if success:
                 logger.info("Successfully updated battery schedule")
             return success

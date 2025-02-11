@@ -115,13 +115,55 @@ def read_battery_schedule(host: str, port: int = 502):
 
     return True
 
+def read_battery_soc(host: str, port: int = 502):
+    """Read and display the soc from Luna2000 battery."""
+    try:
+        # Connect to battery
+        client = ModbusTcpClient(host)
+        if not client.connect():
+            logger.error("Failed to connect to battery")
+            return False
+
+        # Read register (47255 is the Time of Use register)
+        response = client.read_holding_registers(
+            address=37760,
+            count=1,
+            slave=1
+        )
+
+        if response.isError():
+            logger.error(f"Error reading register: {response}")
+            return False
+
+        # Get register data
+        data = list(response.registers)
+
+        logger.info("\nRaw register data:")
+        logger.info(f"  {data}")
+
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        return False
+    
+    finally:
+        if 'client' in locals():
+            client.close()
+
+    return True
+
 def main():
     # Replace with your battery's IP address
     BATTERY_HOST = "192.168.20.194"
     
     logger.info(f"Reading schedule from Luna2000 battery at {BATTERY_HOST}")
     success = read_battery_schedule(BATTERY_HOST)
-    
+
+    if not success:
+        sys.exit(1)
+
+    logger.info(f"Reading SOC from Luna2000 battery at {BATTERY_HOST}")
+    success = read_battery_soc(BATTERY_HOST)
+
     if not success:
         sys.exit(1)
 
