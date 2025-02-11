@@ -101,36 +101,39 @@ class BatteryManager:
             if client:
                 client.close()
 
-    def create_register_data(self, periods: List[Dict]) -> List[int]:
-        """Create register data format from periods."""
-        if len(periods) > 14:
-            raise ValueError("Maximum 14 periods allowed")
-            
-        data = [len(periods)]  # Number of periods
-        
-        for period in sorted(periods, key=lambda x: x['start_time']):
-            # Validate time range
-            if not (0 <= period['start_time'] <= 1440 and 0 <= period['end_time'] <= 1440):
-                raise ValueError("Time values must be between 0 and 1440 minutes")
-            
-            # Convert the weekday to the correct bit value (1=Sunday, 2=Monday, 4=Tuesday, etc.)
-            weekday = next((i for i in range(7) if period['days'] & (1 << i)), 0)
-            day_bit = 1 << weekday if weekday >= 0 else 0
-                
-            combined_flags = self._encode_flags(
-                charge_flag=0 if period['is_charging'] else 1,
-                day_bits=day_bit
+    def get_soc(self) -> Optional[float]:
+        """
+        Get the current State of Charge (SOC) of the battery.
+        Returns:
+            float: Battery SOC in percentage (0-100) or None if read fails
+        """
+        client = None
+        try:
+            client = self.connect()
+            if not client:
+                return None
+
+            response = client.read_holding_registers(
+                address=37760,  # SOC register address
+                count=1,
+                slave=1
             )
-            
-            data.extend([
-                period['start_time'],
-                period['end_time'],
-                combined_flags
-            ])
-            
-        # Pad with zeros to reach 43 values
-        data.extend([0] * (43 - len(data)))
-        return data
+
+            if response.isError():
+                logger.error(f"Error reading SOC register: {response}")
+                return None
+
+            # Convert raw value using gain of 10
+            soc = float(response.registers[0]) / 10.0
+            logger.info(f"Current battery SOC: {soc}%")
+            return soc
+
+        except Exception as e:
+            logger.error(f"Error reading SOC: {e}")
+            return None
+        finally:
+            if client:
+                client.close()
 
     def write_schedule(self, data: List[int]) -> bool:
         """Write schedule to battery."""

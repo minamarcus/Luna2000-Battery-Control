@@ -5,3 +5,10 @@ __pycache__/price_optimizer.cpython-313.pyc
 __pycache__/schedule_manager.cpython-313.pyc
 __pycache__/register_debug.cpython-313.pyc
 __pycache__/period_utils.cpython-313.pyc
+battery_schedule.log
+__pycache__/battery_manager.cpython-311.pyc
+__pycache__/config.cpython-311.pyc
+__pycache__/price_fetcher.cpython-311.pyc
+__pycache__/schedule_manager.cpython-311.pyc
+battery_schedule.log
+__pycache__/battery_manager.cpython-311.pyc

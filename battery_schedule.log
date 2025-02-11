@@ -152,3 +152,269 @@
 2025-02-10 23:46:28,621 - INFO - Successfully wrote schedule to battery
 2025-02-10 23:46:28,622 - INFO - Successfully updated battery schedule
 2025-02-10 23:46:28,623 - INFO - Schedule update completed successfully
+2025-02-11 14:34:20,372 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 14:34:23,672 - INFO - Updating schedule at 2025-02-11 14:34:23.672600+01:00
+2025-02-11 14:34:23,672 - INFO - 
+=== Current Schedule ===
+2025-02-11 14:34:23,673 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-11 14:34:23,673 - INFO - Period 2: Discharging on Tuesday at 07:00-11:00
+2025-02-11 14:34:23,673 - INFO - Period 3: Charging on Tuesday at 23:00-00:00
+2025-02-11 14:34:23,855 - INFO - Preserving today's schedule based on price comparison
+2025-02-11 14:34:23,861 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-11 14:34:23,862 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 14:34:23,862 - INFO - Period 2: Discharging on Wednesday at 07:00-10:00
+2025-02-11 14:34:23,863 - INFO - Period 3: Discharging on Wednesday at 18:00-19:00
+2025-02-11 14:34:23,863 - INFO - 
+=== Final Schedule ===
+2025-02-11 14:34:23,863 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 14:34:23,864 - INFO - Period 2: Charging on Tuesday at 02:00-05:00
+2025-02-11 14:34:23,864 - INFO - Period 3: Discharging on Tuesday at 07:00-11:00
+2025-02-11 14:34:23,864 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 14:34:23,864 - INFO - Period 5: Charging on Tuesday at 23:00-00:00
+2025-02-11 14:34:23,864 - INFO - Successfully updated battery schedule
+2025-02-11 14:34:23,864 - INFO - Schedule update completed successfully
+2025-02-11 14:36:28,389 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 14:36:32,153 - INFO - Updating schedule at 2025-02-11 14:36:32.153347+01:00
+2025-02-11 14:36:32,155 - INFO - 
+=== Current Schedule ===
+2025-02-11 14:36:32,156 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-11 14:36:32,157 - INFO - Period 2: Discharging on Tuesday at 07:00-11:00
+2025-02-11 14:36:32,158 - INFO - Period 3: Charging on Tuesday at 23:00-00:00
+2025-02-11 14:36:32,394 - INFO - Preserving today's schedule based on price comparison
+2025-02-11 14:36:32,404 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-11 14:36:32,404 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 14:36:32,404 - INFO - Period 2: Discharging on Wednesday at 07:00-10:00
+2025-02-11 14:36:32,404 - INFO - Period 3: Discharging on Wednesday at 18:00-19:00
+2025-02-11 14:36:32,404 - INFO - 
+=== Final Schedule ===
+2025-02-11 14:36:32,404 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 14:36:32,405 - INFO - Period 2: Charging on Tuesday at 02:00-05:00
+2025-02-11 14:36:32,405 - INFO - Period 3: Discharging on Tuesday at 07:00-11:00
+2025-02-11 14:36:32,405 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 14:36:32,405 - INFO - Period 5: Charging on Tuesday at 23:00-00:00
+2025-02-11 14:36:32,405 - INFO - Successfully updated battery schedule
+2025-02-11 14:36:32,405 - INFO - Schedule update completed successfully
+2025-02-11 14:39:34,718 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 14:39:37,997 - INFO - Updating schedule at 2025-02-11 14:39:37.997782+01:00
+2025-02-11 14:39:37,999 - INFO - 
+=== Current Schedule ===
+2025-02-11 14:39:38,000 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-11 14:39:38,002 - INFO - Period 2: Discharging on Tuesday at 07:00-11:00
+2025-02-11 14:39:38,003 - INFO - Period 3: Charging on Tuesday at 23:00-00:00
+2025-02-11 14:39:38,206 - INFO - Preserving today's schedule based on price comparison
+2025-02-11 14:39:38,210 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-11 14:39:38,210 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 14:39:38,210 - INFO - Period 2: Discharging on Wednesday at 07:00-10:00
+2025-02-11 14:39:38,210 - INFO - Period 3: Discharging on Wednesday at 18:00-19:00
+2025-02-11 14:39:38,210 - INFO - 
+=== Final Schedule ===
+2025-02-11 14:39:38,211 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 14:39:38,211 - INFO - Period 2: Charging on Tuesday at 02:00-05:00
+2025-02-11 14:39:38,211 - INFO - Period 3: Discharging on Tuesday at 07:00-11:00
+2025-02-11 14:39:38,211 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 14:39:38,211 - INFO - Period 5: Charging on Tuesday at 23:00-00:00
+2025-02-11 14:39:38,214 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 14:39:41,960 - INFO - Successfully wrote schedule to battery
+2025-02-11 14:39:41,962 - INFO - Successfully updated battery schedule
+2025-02-11 14:39:41,962 - INFO - Schedule update completed successfully
+2025-02-11 16:15:29,930 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:15:33,073 - INFO - Updating schedule at 2025-02-11 16:15:33.073469+01:00
+2025-02-11 16:15:33,074 - INFO - 
+=== Current Schedule ===
+2025-02-11 16:15:33,076 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-11 16:15:33,077 - INFO - Period 2: Discharging on Tuesday at 07:00-11:00
+2025-02-11 16:15:33,078 - INFO - Period 3: Charging on Tuesday at 23:00-00:00
+2025-02-11 16:15:33,079 - ERROR - Unexpected error in schedule update: 'BatteryManager' object has no attribute 'get_soc'
+2025-02-11 16:15:33,081 - ERROR - Schedule update failed
+2025-02-11 16:22:36,200 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:22:39,788 - INFO - Updating schedule at 2025-02-11 16:22:39.788861+01:00
+2025-02-11 16:22:39,791 - INFO - 
+=== Current Schedule ===
+2025-02-11 16:22:39,792 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-11 16:22:39,793 - INFO - Period 2: Discharging on Tuesday at 07:00-11:00
+2025-02-11 16:22:39,794 - INFO - Period 3: Charging on Tuesday at 23:00-00:00
+2025-02-11 16:22:39,799 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:22:43,251 - INFO - Current battery SOC: 4.0%
+2025-02-11 16:22:43,464 - INFO - Clearing current schedule due to low SOC: 4.0%
+2025-02-11 16:22:43,479 - INFO - 
+=== Final Schedule ===
+2025-02-11 16:22:43,479 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 16:22:43,479 - INFO - Period 2: Charging on Wednesday at 01:00-03:00
+2025-02-11 16:22:43,479 - INFO - Period 3: Discharging on Wednesday at 07:00-10:00
+2025-02-11 16:22:43,480 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 16:22:43,480 - INFO - Period 5: Charging on Tuesday at 22:00-00:00
+2025-02-11 16:22:43,480 - ERROR - Unexpected error in schedule update: name 'success' is not defined
+2025-02-11 16:22:43,480 - ERROR - Schedule update failed
+2025-02-11 16:27:53,544 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:27:56,748 - INFO - Updating schedule at 2025-02-11 16:27:56.748827+01:00
+2025-02-11 16:27:56,749 - INFO - 
+=== Current Schedule ===
+2025-02-11 16:27:56,750 - INFO - Period 1: Charging on Tuesday at 02:00-05:00
+2025-02-11 16:27:56,751 - INFO - Period 2: Discharging on Tuesday at 07:00-11:00
+2025-02-11 16:27:56,751 - INFO - Period 3: Charging on Tuesday at 23:00-00:00
+2025-02-11 16:27:56,776 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:28:00,466 - INFO - Current battery SOC: 4.0%
+2025-02-11 16:28:00,701 - INFO - Clearing current schedule due to low SOC: 4.0%
+2025-02-11 16:28:00,710 - INFO - 
+=== Final Schedule ===
+2025-02-11 16:28:00,710 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 16:28:00,711 - INFO - Period 2: Charging on Wednesday at 01:00-03:00
+2025-02-11 16:28:00,711 - INFO - Period 3: Discharging on Wednesday at 07:00-10:00
+2025-02-11 16:28:00,711 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 16:28:00,711 - INFO - Period 5: Charging on Tuesday at 22:00-00:00
+2025-02-11 16:28:00,712 - ERROR - Unexpected error in schedule update: name 'success' is not defined
+2025-02-11 16:28:00,712 - ERROR - Schedule update failed
+2025-02-11 16:30:13,158 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:30:19,182 - ERROR - Exception response 131 / 0
+2025-02-11 16:30:19,183 - ERROR - Error reading register: ExceptionResponse(dev_id=1, transaction_id=1, address=0, count=0, bits=[], registers=[], status=1)
+2025-02-11 16:30:19,185 - ERROR - Failed to read current schedule
+2025-02-11 16:30:19,185 - ERROR - Schedule update failed
+2025-02-11 16:32:15,508 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:32:19,608 - INFO - Updating schedule at 2025-02-11 16:32:19.608412+01:00
+2025-02-11 16:32:19,609 - INFO - 
+=== Current Schedule ===
+2025-02-11 16:32:19,611 - INFO - Period 1: Charging on Tuesday at 23:00-00:00
+2025-02-11 16:32:19,629 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:32:23,612 - INFO - Current battery SOC: 4.0%
+2025-02-11 16:32:23,849 - INFO - Clearing current schedule due to low SOC: 4.0%
+2025-02-11 16:32:23,855 - INFO - 
+=== Final Schedule ===
+2025-02-11 16:32:23,855 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 16:32:23,855 - INFO - Period 2: Charging on Wednesday at 01:00-03:00
+2025-02-11 16:32:23,855 - INFO - Period 3: Discharging on Wednesday at 07:00-10:00
+2025-02-11 16:32:23,856 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 16:32:23,856 - INFO - Period 5: Charging on Tuesday at 22:00-00:00
+2025-02-11 16:32:23,856 - ERROR - Unexpected error in schedule update: name 'success' is not defined
+2025-02-11 16:32:23,857 - ERROR - Schedule update failed
+2025-02-11 16:37:14,025 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:37:17,812 - INFO - Updating schedule at 2025-02-11 16:37:17.812742+01:00
+2025-02-11 16:37:17,813 - INFO - 
+=== Current Schedule ===
+2025-02-11 16:37:17,815 - INFO - Period 1: Charging on Tuesday at 23:00-00:00
+2025-02-11 16:37:17,824 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 16:37:21,577 - INFO - Current battery SOC: 4.0%
+2025-02-11 16:37:21,830 - INFO - Clearing current schedule due to low SOC: 4.0%
+2025-02-11 16:37:21,839 - INFO - 
+=== Final Schedule ===
+2025-02-11 16:37:21,840 - INFO - Period 1: Charging on Wednesday at 00:00-04:00
+2025-02-11 16:37:21,840 - INFO - Period 2: Charging on Wednesday at 01:00-03:00
+2025-02-11 16:37:21,840 - INFO - Period 3: Discharging on Wednesday at 07:00-10:00
+2025-02-11 16:37:21,840 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 16:37:21,841 - INFO - Period 5: Charging on Tuesday at 22:00-00:00
+2025-02-11 16:37:21,841 - ERROR - Unexpected error in schedule update: name 'success' is not defined
+2025-02-11 16:37:21,841 - ERROR - Schedule update failed
+2025-02-11 17:14:03,302 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:14:06,498 - INFO - Current battery SOC: 4.0%
+2025-02-11 17:14:06,507 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:14:10,299 - INFO - Updating schedule at 2025-02-11 17:14:10.299273+01:00 (Current SOC: 4.0%)
+2025-02-11 17:14:10,301 - INFO - 
+=== Current Schedule ===
+2025-02-11 17:14:10,301 - INFO - Period 1: Charging on Tuesday at 23:00-00:00
+2025-02-11 17:14:10,512 - INFO - Clearing current schedule due to low SOC (4.0%)
+2025-02-11 17:14:10,517 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-11 17:14:10,517 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:14:10,517 - INFO - Period 2: Charging on Wednesday at 22:00-00:00
+2025-02-11 17:14:10,524 - INFO - Period 3: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:14:10,524 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:14:10,524 - INFO - 
+=== Final Schedule ===
+2025-02-11 17:14:10,524 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:14:10,525 - INFO - Period 2: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:14:10,525 - INFO - Period 3: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:14:10,525 - INFO - Period 4: Charging on Wednesday at 22:00-00:00
+2025-02-11 17:14:10,525 - ERROR - Unexpected error in schedule update: name 'success' is not defined
+2025-02-11 17:14:10,526 - ERROR - Schedule update failed
+2025-02-11 17:26:43,761 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:26:47,125 - INFO - Current battery SOC: 4.0%
+2025-02-11 17:26:47,141 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:26:50,602 - INFO - Updating schedule at 2025-02-11 17:26:50.602715+01:00 (Current SOC: 4.0%)
+2025-02-11 17:26:50,602 - INFO - 
+=== Current Schedule ===
+2025-02-11 17:26:50,602 - INFO - Period 1: Charging on Tuesday at 23:00-00:00
+2025-02-11 17:26:50,802 - INFO - Clearing current schedule due to low SOC (4.0%)
+2025-02-11 17:26:50,803 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-11 17:26:50,803 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:26:50,803 - INFO - Period 2: Charging on Wednesday at 22:00-00:00
+2025-02-11 17:26:50,812 - INFO - Period 3: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:26:50,812 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:26:50,812 - INFO - 
+=== Final Schedule ===
+2025-02-11 17:26:50,812 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:26:50,812 - INFO - Period 2: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:26:50,812 - INFO - Period 3: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:26:50,812 - INFO - Period 4: Charging on Wednesday at 22:00-00:00
+2025-02-11 17:26:50,812 - ERROR - Unexpected error in schedule update: name 'success' is not defined
+2025-02-11 17:26:50,813 - ERROR - Schedule update failed
+2025-02-11 17:28:07,969 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:28:11,187 - INFO - Current battery SOC: 4.0%
+2025-02-11 17:28:11,193 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:28:14,623 - INFO - Updating schedule at 2025-02-11 17:28:14.623622+01:00 (Current SOC: 4.0%)
+2025-02-11 17:28:14,623 - INFO - 
+=== Current Schedule ===
+2025-02-11 17:28:14,623 - INFO - Period 1: Charging on Tuesday at 23:00-00:00
+2025-02-11 17:28:15,285 - INFO - Clearing current schedule due to low SOC (4.0%)
+2025-02-11 17:28:15,285 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-11 17:28:15,285 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:28:15,285 - INFO - Period 2: Charging on Tuesday at 22:00-00:00
+2025-02-11 17:28:15,299 - INFO - Period 3: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:28:15,299 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:28:15,299 - INFO - 
+=== Final Schedule ===
+2025-02-11 17:28:15,299 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:28:15,299 - INFO - Period 2: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:28:15,300 - INFO - Period 3: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:28:15,300 - INFO - Period 4: Charging on Tuesday at 22:00-00:00
+2025-02-11 17:28:15,300 - ERROR - Unexpected error in schedule update: name 'success' is not defined
+2025-02-11 17:28:15,300 - ERROR - Schedule update failed
+2025-02-11 17:33:10,061 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:33:13,750 - INFO - Current battery SOC: 4.0%
+2025-02-11 17:33:13,754 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:33:18,194 - INFO - Updating schedule at 2025-02-11 17:33:18.194564+01:00 (Current SOC: 4.0%)
+2025-02-11 17:33:18,194 - INFO - 
+=== Current Schedule ===
+2025-02-11 17:33:18,199 - INFO - Period 1: Charging on Tuesday at 23:00-00:00
+2025-02-11 17:33:18,394 - INFO - Clearing current schedule due to low SOC (4.0%)
+2025-02-11 17:33:18,413 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-11 17:33:18,413 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:33:18,413 - INFO - Period 2: Charging on Tuesday at 22:00-00:00
+2025-02-11 17:33:18,414 - INFO - Period 3: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:33:18,414 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:33:18,415 - INFO - 
+=== Final Schedule ===
+2025-02-11 17:33:18,415 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:33:18,416 - INFO - Period 2: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:33:18,416 - INFO - Period 3: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:33:18,416 - INFO - Period 4: Charging on Tuesday at 22:00-00:00
+2025-02-11 17:33:18,417 - ERROR - Unexpected error in schedule update: name 'success' is not defined
+2025-02-11 17:33:18,417 - ERROR - Schedule update failed
+2025-02-11 17:34:07,131 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:34:10,768 - INFO - Current battery SOC: 4.0%
+2025-02-11 17:34:10,770 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:34:14,835 - INFO - Updating schedule at 2025-02-11 17:34:14.835303+01:00 (Current SOC: 4.0%)
+2025-02-11 17:34:14,835 - INFO - 
+=== Current Schedule ===
+2025-02-11 17:34:14,835 - INFO - Period 1: Charging on Tuesday at 23:00-00:00
+2025-02-11 17:34:15,358 - INFO - Clearing current schedule due to low SOC (4.0%)
+2025-02-11 17:34:15,365 - INFO - 
+=== New Periods for Tomorrow ===
+2025-02-11 17:34:15,366 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:34:15,366 - INFO - Period 2: Charging on Tuesday at 22:00-00:00
+2025-02-11 17:34:15,366 - INFO - Period 3: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:34:15,367 - INFO - Period 4: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:34:15,367 - INFO - 
+=== Final Schedule ===
+2025-02-11 17:34:15,367 - INFO - Period 1: Charging on Wednesday at 01:00-03:00
+2025-02-11 17:34:15,367 - INFO - Period 2: Discharging on Wednesday at 07:00-10:00
+2025-02-11 17:34:15,368 - INFO - Period 3: Discharging on Wednesday at 18:00-19:00
+2025-02-11 17:34:15,368 - INFO - Period 4: Charging on Tuesday at 22:00-00:00
+2025-02-11 17:34:15,371 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-11 17:34:18,959 - INFO - Successfully wrote schedule to battery
+2025-02-11 17:34:18,959 - INFO - Successfully updated battery schedule
+2025-02-11 17:34:18,959 - INFO - Schedule update completed successfully
