@@ -1,7 +1,10 @@
 from datetime import datetime, timedelta
 import pandas as pd
 from typing import List, Dict, Tuple, Optional
-from config import logger, MAX_PERIODS, MAX_MINUTES, STOCKHOLM_TZ
+from config import (
+    logger, MAX_PERIODS, MAX_MINUTES, STOCKHOLM_TZ,
+    MAX_CHARGING_PERIODS, MAX_DISCHARGING_PERIODS
+)
 from battery_manager import BatteryManager
 from price_fetcher import PriceFetcher
 from period_utils import *
@@ -13,6 +16,8 @@ class ScheduleManager:
         self.MAX_PERIODS = MAX_PERIODS
         self.MAX_MINUTES = MAX_MINUTES
         self.stockholm_tz = STOCKHOLM_TZ
+        self.max_charging_periods = MAX_CHARGING_PERIODS
+        self.max_discharging_periods = MAX_DISCHARGING_PERIODS
 
     def _get_night_prices(self, today_prices: List[Dict], tomorrow_prices: List[Dict]) -> List[Dict]:
         """
@@ -49,7 +54,7 @@ class ScheduleManager:
         # Normalize end time: 1440 should be 0
         if end_minutes == self.MAX_MINUTES:
             end_minutes = 0
-                
+        
         return {
             'start_time': start_minutes,
             'end_time': end_minutes,
@@ -61,7 +66,7 @@ class ScheduleManager:
     def _process_charging_periods(self, night_prices: List[Dict], target_date: datetime) -> List[Dict]:
         """Process and create charging periods for night hours."""
         # First sort by price to get the cheapest hours
-        selected_prices = sorted(night_prices[:4], key=lambda x: x['hour'])
+        selected_prices = sorted(night_prices[:self.max_charging_periods], key=lambda x: x['hour'])
         
         # Create periods for selected hours
         periods = []
@@ -84,20 +89,14 @@ class ScheduleManager:
 
     def _process_discharging_periods(self, df: pd.DataFrame, day_bit: int) -> List[Dict]:
         """Process and create periods for discharging during daytime."""
-        # Sort hours by price (descending for discharging)
-        sorted_df = df.sort_values('SEK_per_kWh', ascending=False)
+        # Filter for day hours first
+        day_df = df[df['hour'].apply(is_day_hour)]
         
-        # Select the best hours (up to 4)
-        selected_hours = []
-        for _, row in sorted_df.iterrows():
-            hour = normalize_hour(row['hour'])
-            if len(selected_hours) >= 4:
-                break
-            if is_day_hour(hour):
-                selected_hours.append(hour)
+        # Select the best hours (up to max_discharging_periods)
+        best_hours_df = day_df.nlargest(self.max_discharging_periods, 'SEK_per_kWh')
         
-        # Sort hours chronologically
-        selected_hours.sort()
+        # Sort chronologically to create periods
+        selected_hours = sorted(best_hours_df['hour'].tolist())
         
         # Create initial periods (one hour each)
         periods = []
@@ -139,7 +138,15 @@ class ScheduleManager:
         return combined
 
     def check_overlap(self, period1: Dict, period2: Dict) -> bool:
-        """Check if two periods overlap."""
+        """
+        Check if two periods overlap in both time and day.
+        Periods only overlap if they share at least one common day and their times overlap.
+        """
+        # First check if the periods share any days
+        common_days = period1['days'] & period2['days']  # Bitwise AND of day bits
+        if not common_days:
+            return False  # No overlap if no common days
+        
         def normalize_times(period):
             start = period['start_time']
             end = period['end_time']
