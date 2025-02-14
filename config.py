@@ -25,3 +25,7 @@ API_BASE_URL = "https://www.elprisetjustnu.se/api/v1/prices"
 # Schedule configuration
 MAX_CHARGING_PERIODS = 3    # Maximum number of charging periods to select
 MAX_DISCHARGING_PERIODS = 3 # Maximum number of discharging periods to select
+
+# Retry configuration
+MAX_RETRIES = 3
+RETRY_DELAY = 60  # seconds

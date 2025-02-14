@@ -1,6 +1,7 @@
 from typing import List, Dict, Optional
 from pymodbus.client import ModbusTcpClient
 from config import logger, TOU_REGISTER, PORT
+import time
 
 class BatteryManager:
     def __init__(self, host: str, port: int = PORT):
@@ -79,7 +80,7 @@ class BatteryManager:
         try:
             client = self.connect()
             if not client:
-                return None
+                raise RuntimeError("Failed to connect to battery")
 
             response = client.read_holding_registers(
                 address=self.TOU_REGISTER,
@@ -88,15 +89,17 @@ class BatteryManager:
             )
 
             if response.isError():
-                logger.error(f"Error reading register: {response}")
-                return None
+                error_msg = f"Error reading register: {response}"
+                logger.error(error_msg)
+                raise RuntimeError(error_msg)
 
             data = list(response.registers)
             return self._parse_schedule(data)
 
         except Exception as e:
-            logger.error(f"Error reading schedule: {e}")
-            return None
+            error_msg = f"Error reading schedule: {e}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
         finally:
             if client:
                 client.close()
@@ -105,13 +108,15 @@ class BatteryManager:
         """
         Get the current State of Charge (SOC) of the battery.
         Returns:
-            float: Battery SOC in percentage (0-100) or None if read fails
+            float: Battery SOC in percentage (0-100)
+        Raises:
+            RuntimeError: If unable to read SOC
         """
         client = None
         try:
             client = self.connect()
             if not client:
-                return None
+                raise RuntimeError("Failed to connect to battery")
 
             response = client.read_holding_registers(
                 address=37760,  # SOC register address
@@ -120,8 +125,9 @@ class BatteryManager:
             )
 
             if response.isError():
-                logger.error(f"Error reading SOC register: {response}")
-                return None
+                error_msg = f"Error reading SOC register: {response}"
+                logger.error(error_msg)
+                raise RuntimeError(error_msg)
 
             # Convert raw value using gain of 10
             soc = float(response.registers[0]) / 10.0
@@ -129,22 +135,25 @@ class BatteryManager:
             return soc
 
         except Exception as e:
-            logger.error(f"Error reading SOC: {e}")
-            return None
+            error_msg = f"Error reading SOC: {e}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
         finally:
             if client:
                 client.close()
 
     def write_schedule(self, data: List[int]) -> bool:
         """Write schedule to battery."""
+        if len(data) != 43:
+            raise ValueError(f"Data must be exactly 43 values, got {len(data)}")
+
         client = None
         try:
             client = self.connect()
             if not client:
-                return False
+                raise RuntimeError("Failed to connect to battery")
 
-            if len(data) != 43:
-                raise ValueError(f"Data must be exactly 43 values, got {len(data)}")
+            logger.info(f"Attempting to write schedule data: {data}")
 
             response = client.write_registers(
                 address=self.TOU_REGISTER,
@@ -153,14 +162,19 @@ class BatteryManager:
             )
 
             if response.isError():
-                raise Exception(f"Error writing to register: {response}")
+                error_code = getattr(response, 'exception_code', None)
+                error_msg = (f"Modbus error. Error code: {error_code}. "
+                           f"Full response: {response}")
+                logger.error(error_msg)
+                raise RuntimeError(error_msg)
 
             logger.info("Successfully wrote schedule to battery")
             return True
 
         except Exception as e:
-            logger.error(f"Error writing schedule: {e}")
-            return False
+            error_msg = f"Error writing schedule: {e}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
         finally:
             if client:
                 client.close()

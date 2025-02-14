@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 import pandas as pd
 from typing import List, Dict, Tuple, Optional
+import time
 from config import (
     logger, MAX_PERIODS, MAX_MINUTES, STOCKHOLM_TZ,
-    MAX_CHARGING_PERIODS, MAX_DISCHARGING_PERIODS
+    MAX_CHARGING_PERIODS, MAX_DISCHARGING_PERIODS,
+    MAX_RETRIES, RETRY_DELAY
 )
 from battery_manager import BatteryManager
 from price_fetcher import PriceFetcher
@@ -163,13 +165,27 @@ class ScheduleManager:
         
         return not (end1 <= start2 or end2 <= start1)
 
+    def _is_period_in_future(self, period: Dict, current_time: datetime) -> bool:
+        """Check if a period starts after the current time."""
+        period_start_hour = period['start_time'] // 60
+        current_hour = current_time.hour
+        current_minute = current_time.minute
+        current_minutes = current_hour * 60 + current_minute
+        
+        return period['start_time'] > current_minutes
+
     def clean_schedule(self, schedule: Dict, current_date: datetime) -> List[Dict]:
-        """Remove periods that aren't for the current day."""
+        """Remove periods that aren't for the current day or have already passed."""
         if not schedule or 'periods' not in schedule:
             return []
+            
         current_day_bit = get_day_bit(current_date)
-        return [p for p in schedule['periods'] if p['days'] & current_day_bit]
-
+        current_time = current_date
+        
+        return [p for p in schedule['periods'] 
+                if (p['days'] & current_day_bit) and 
+                   self._is_period_in_future(p, current_time)]
+    
     def create_register_data(self, periods: List[Dict]) -> List[int]:
         """Create register data format from periods."""
         if len(periods) > self.MAX_PERIODS:
@@ -237,74 +253,86 @@ class ScheduleManager:
         return charging_periods, discharging_periods
 
     def update_schedule(self) -> bool:
-        """Main function to update the schedule."""
-        try:
-            # Get current battery state
-            current_soc = self.battery.get_soc()
-            if current_soc is None:
-                logger.error("Failed to read battery SOC")
-                return False
+        """Main function to update the schedule with retries."""
+        for attempt in range(MAX_RETRIES):
+            try:
+                logger.info(f"Schedule update attempt {attempt + 1}/{MAX_RETRIES}")
+                
+                # Get current battery state
+                current_soc = self.battery.get_soc()
+                if current_soc is None:
+                    raise RuntimeError("Failed to read battery SOC")
 
-            current_schedule = self.battery.read_schedule()
-            if not current_schedule:
-                logger.error("Failed to read current schedule")
-                return False
+                current_schedule = self.battery.read_schedule()
+                if not current_schedule:
+                    raise RuntimeError("Failed to read current schedule")
 
-            now = datetime.now(self.stockholm_tz)
-            tomorrow = now + timedelta(days=1)
-            
-            logger.info(f"Updating schedule at {now} (Current SOC: {current_soc}%)")
-            
-            # Get current schedule
-            current_periods = self.clean_schedule(current_schedule, now)
-            self.log_schedule(current_periods, "Current Schedule")
-            
-            # Get prices for today and tomorrow
-            prices = self.price_fetcher.get_prices()
-            if not prices.get('today') or not prices.get('tomorrow'):
-                logger.error("Failed to fetch prices")
-                return False
-            
-            # Keep current periods if SOC > 10%
-            if current_soc > 10:
-                logger.info(f"Preserving current schedule (SOC: {current_soc}%)")
-            else:
-                logger.info(f"Clearing current schedule due to low SOC ({current_soc}%)")
-                current_periods = []
-            
-            # Find optimal periods for tomorrow
-            charging_periods, discharging_periods = self.find_optimal_periods(
-                prices['today'],
-                prices['tomorrow'], 
-                tomorrow
-            )
-            new_periods = charging_periods + discharging_periods
-            self.log_schedule(new_periods, "New Periods for Tomorrow")
-            
-            # Merge and check for overlaps
-            all_periods = sorted(current_periods + new_periods, 
-                               key=lambda x: x['start_time'])
-            final_periods = []
-            
-            for period in all_periods:
-                overlap = False
-                for existing in final_periods:
-                    if self.check_overlap(period, existing):
-                        overlap = True
-                        break
-                if not overlap:
-                    final_periods.append(period)
-            
-            # Create and write new register data
-            new_register_data = self.create_register_data(final_periods)
-            self.log_schedule(final_periods, "Final Schedule")
-            
-            # Write to battery
-            success = self.battery.write_schedule(new_register_data)
-            if success:
-                logger.info("Successfully updated battery schedule")
-            return success
+                now = datetime.now(self.stockholm_tz)
+                tomorrow = now + timedelta(days=1)
+                
+                logger.info(f"Updating schedule at {now} (Current SOC: {current_soc}%)")
+                
+                # Get current schedule
+                current_periods = self.clean_schedule(current_schedule, now)
+                self.log_schedule(current_periods, "Current Schedule")
+                
+                # Get prices for today and tomorrow
+                prices = self.price_fetcher.get_prices()
+                if not prices.get('today') or not prices.get('tomorrow'):
+                    raise RuntimeError("Failed to fetch prices")
+                
+                # Keep future periods if SOC > 10%
+                if current_soc > 10:
+                    logger.info(f"Checking for future periods to preserve (SOC: {current_soc}%)")
+                    if current_periods:
+                        logger.info(f"Preserving {len(current_periods)} future periods")
+                    else:
+                        logger.info("No future periods found in current schedule")
+                else:
+                    logger.info(f"Clearing current schedule due to low SOC ({current_soc}%)")
+                    current_periods = []
+                
+                # Find optimal periods for tomorrow
+                charging_periods, discharging_periods = self.find_optimal_periods(
+                    prices['today'],
+                    prices['tomorrow'], 
+                    tomorrow
+                )
+                new_periods = charging_periods + discharging_periods
+                self.log_schedule(new_periods, "New Periods for Tomorrow")
+                
+                # Merge and check for overlaps
+                all_periods = sorted(current_periods + new_periods, 
+                                   key=lambda x: x['start_time'])
+                final_periods = []
+                
+                for period in all_periods:
+                    overlap = False
+                    for existing in final_periods:
+                        if self.check_overlap(period, existing):
+                            overlap = True
+                            break
+                    if not overlap:
+                        final_periods.append(period)
+                
+                # Create and write new register data
+                new_register_data = self.create_register_data(final_periods)
+                self.log_schedule(final_periods, "Final Schedule")
 
-        except Exception as e:
-            logger.error(f"Unexpected error in schedule update: {e}")
-            return False
+                # Write to battery
+                success = self.battery.write_schedule(new_register_data)
+                if success:
+                    logger.info("Successfully updated battery schedule")
+                    return True
+                else:
+                    raise RuntimeError("Failed to write schedule to battery")
+
+            except Exception as e:
+                logger.error(f"Error on attempt {attempt + 1}/{MAX_RETRIES}: {e}")
+                if attempt < MAX_RETRIES - 1:
+                    logger.info(f"Waiting {RETRY_DELAY} seconds before retry...")
+                    time.sleep(RETRY_DELAY)
+                continue
+
+        logger.error(f"Failed to update schedule after {MAX_RETRIES} attempts")
+        return False
