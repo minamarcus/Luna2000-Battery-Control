@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import time
 from typing import List, Dict
 from config import (
-    logger, MAX_PERIODS, MAX_MINUTES, STOCKHOLM_TZ,
+    logger, MAX_PERIODS, STOCKHOLM_TZ,
     MAX_CHARGING_PERIODS, MAX_DISCHARGING_PERIODS,
     MAX_RETRIES, RETRY_DELAY
 )
@@ -52,24 +52,42 @@ class ScheduleManager:
                 prices = self.price_fetcher.get_prices()
                 if not prices.get('today') or not prices.get('tomorrow'):
                     raise RuntimeError("Failed to fetch prices")
-                
-                # Keep future periods if SOC > 10%
+
+                # Find optimal periods for tomorrow first to compare prices
+                charging_periods, discharging_periods = self.optimization_manager.find_optimal_periods(
+                    prices['today'],
+                    prices['tomorrow'], 
+                    tomorrow
+                )
+
+                # Keep future periods if SOC > 10% and price comparison is favorable
                 if current_soc > 10:
                     logger.info(f"Checking for future periods to preserve (SOC: {current_soc}%)")
                     if current_periods:
-                        logger.info(f"Preserving {len(current_periods)} future periods")
+                        # Compare prices between current and new periods
+                        keep_current = not self.period_manager.compare_period_prices(
+                            current_periods,
+                            discharging_periods,
+                            prices
+                        )
+                        
+                        if keep_current:
+                            logger.info(
+                                f"Preserving {len(current_periods)} future periods - new prices "
+                                f"not {self.period_manager.price_threshold_factor*100}% higher"
+                            )
+                        else:
+                            logger.info(
+                                f"Clearing current periods - new prices are at least "
+                                f"{self.period_manager.price_threshold_factor*100}% higher"
+                            )
+                            current_periods = []
                     else:
                         logger.info("No future periods found in current schedule")
                 else:
                     logger.info(f"Clearing current schedule due to low SOC ({current_soc}%)")
                     current_periods = []
                 
-                # Find optimal periods for tomorrow
-                charging_periods, discharging_periods = self.optimization_manager.find_optimal_periods(
-                    prices['today'],
-                    prices['tomorrow'], 
-                    tomorrow
-                )
                 new_periods = charging_periods + discharging_periods
                 self.schedule_data_manager.log_schedule(new_periods, "New Periods for Tomorrow")
                 

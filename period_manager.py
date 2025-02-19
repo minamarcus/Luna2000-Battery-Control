@@ -1,12 +1,13 @@
 from typing import Dict, List
 from datetime import datetime
-from config import MAX_MINUTES, MAX_PERIODS
+from config import MAX_MINUTES, MAX_PERIODS, PRICE_THRESHOLD_FACTOR
 from period_utils import get_day_bit, is_day_hour
 
 class PeriodManager:
     def __init__(self):
         self.MAX_MINUTES = MAX_MINUTES
         self.MAX_PERIODS = MAX_PERIODS
+        self.price_threshold_factor = PRICE_THRESHOLD_FACTOR
 
     def create_period(self, start_hour: int, end_hour: int, 
                      is_charging: bool, day_bit: int) -> Dict:
@@ -83,3 +84,57 @@ class PeriodManager:
         """Check if a period starts after the current time."""
         current_minutes = current_time.hour * 60 + current_time.minute
         return period['start_time'] > current_minutes
+    
+    def compare_period_prices(self, current_periods: List[Dict], 
+                             new_discharging_periods: List[Dict], 
+                             prices: Dict[str, List[Dict]]) -> bool:
+        """
+        Compare prices between current periods and new discharging periods.
+        Returns True if new periods are more profitable by the configured threshold factor.
+        
+        Args:
+            current_periods: List of current schedule periods
+            new_discharging_periods: List of new discharging periods for tomorrow
+            prices: Dictionary containing today's and tomorrow's prices
+        """
+        # Filter out charging periods from current schedule
+        current_discharge_periods = [p for p in current_periods if not p['is_charging']]
+        if not current_discharge_periods:
+            return True  # No current discharge periods to compare
+
+        # Calculate average price for current discharge periods
+        current_prices = []
+        for period in current_discharge_periods:
+            start_hour = period['start_time'] // 60
+            for hour in range(start_hour, (period['end_time'] // 60) % 24 + 1):
+                hour_price = next(
+                    (p['SEK_per_kWh'] for p in prices['today'] if p['hour'] == hour % 24),
+                    None
+                )
+                if hour_price:
+                    current_prices.append(hour_price)
+        
+        if not current_prices:
+            return True  # No valid prices found for current periods
+        
+        current_avg_price = sum(current_prices) / len(current_prices)
+
+        # Calculate average price for new discharge periods
+        new_prices = []
+        for period in new_discharging_periods:
+            start_hour = period['start_time'] // 60
+            for hour in range(start_hour, (period['end_time'] // 60) % 24 + 1):
+                hour_price = next(
+                    (p['SEK_per_kWh'] for p in prices['tomorrow'] if p['hour'] == hour % 24),
+                    None
+                )
+                if hour_price:
+                    new_prices.append(hour_price)
+        
+        if not new_prices:
+            return False  # No valid prices found for new periods
+            
+        new_avg_price = sum(new_prices) / len(new_prices)
+
+        # Check if new prices exceed the threshold factor
+        return new_avg_price >= (current_avg_price * self.price_threshold_factor)
