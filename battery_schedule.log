@@ -2086,3 +2086,136 @@ websockets.exceptions.ConnectionClosedError: no close frame received or sent
 2025-02-25 21:41:39,872 - INFO - Cleaning up high usage monitor resources
 2025-02-25 21:41:39,872 - INFO - Cleanup tasks completed
 2025-02-25 21:41:39,872 - INFO - Resource cleanup complete
+2025-02-25 21:54:25,755 - INFO - Starting Battery Management System
+2025-02-25 21:54:25,755 - INFO - Starting high usage monitor service
+2025-02-25 21:54:25,775 - INFO - Initializing Tibber connection...
+2025-02-25 21:54:25,775 - INFO - Initializing Tibber connection...
+2025-02-25 21:54:25,994 - INFO - Connected to Tibber as: Mina Marcus
+2025-02-25 21:54:26,061 - INFO - Monitoring home: Årdalavägen 149
+2025-02-25 21:54:26,061 - INFO - Starting monitoring...
+2025-02-25 21:54:26,061 - INFO - Starting high usage monitor
+2025-02-25 21:54:26,067 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 21:54:29,992 - INFO - Current battery mode: 5
+2025-02-25 21:54:29,992 - INFO - Successfully connected to battery. Current mode: 5
+2025-02-25 21:54:29,992 - INFO - Starting Tibber power monitoring
+2025-02-25 21:54:29,992 - INFO - Subscribing to real-time measurements...
+2025-02-25 21:54:30,255 - INFO - Successfully subscribed to real-time measurements
+2025-02-25 21:54:30,948 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 21:54:36,662 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 21:54:40,588 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 21:54:43,917 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 21:54:47,902 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 21:54:51,281 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 21:54:54,902 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 21:54:58,067 - INFO - Shutdown signal received
+2025-02-25 21:54:58,764 - INFO - Monitoring loop cancelled
+2025-02-25 21:54:58,765 - INFO - Monitoring stopped
+2025-02-25 21:54:58,765 - INFO - Cleaning up resources...
+2025-02-25 21:54:58,765 - INFO - Stopping monitor...
+2025-02-25 21:54:58,765 - INFO - Stopping high usage monitor
+2025-02-25 21:54:58,765 - INFO - Closing aiohttp session...
+2025-02-25 21:54:58,766 - INFO - Running 2 cleanup tasks...
+2025-02-25 21:54:58,766 - INFO - Cleaning up high usage monitor resources
+2025-02-25 21:54:58,767 - ERROR - Unhandled exception: {'message': 'Task exception was never retrieved', 'exception': ConnectionClosedError(None, None, None), 'future': <Task finished name='Task-16' coro=<<async_generator_athrow without __name__>()> exception=ConnectionClosedError(None, None, None)>}
+2025-02-25 21:54:58,768 - INFO - Cleanup tasks completed
+2025-02-25 21:54:58,768 - INFO - Resource cleanup complete
+2025-02-25 21:56:17,261 - INFO - Starting Battery Management System
+2025-02-25 21:56:17,262 - INFO - Starting high usage monitor service
+2025-02-25 21:56:17,282 - INFO - Initializing Tibber connection...
+2025-02-25 21:56:17,282 - INFO - Initializing Tibber connection...
+2025-02-25 21:56:17,486 - INFO - Connected to Tibber as: Mina Marcus
+2025-02-25 21:56:17,541 - INFO - Monitoring home: Årdalavägen 149
+2025-02-25 21:56:17,541 - INFO - Starting monitoring...
+2025-02-25 21:56:17,541 - INFO - Starting high usage monitor
+2025-02-25 21:56:17,546 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 21:56:21,149 - INFO - Current battery mode: 5
+2025-02-25 21:56:21,153 - INFO - Successfully connected to battery. Current mode: 5
+2025-02-25 21:56:21,153 - INFO - Starting Tibber power monitoring
+2025-02-25 21:56:21,153 - INFO - Subscribing to real-time measurements...
+2025-02-25 21:56:21,411 - INFO - Successfully subscribed to real-time measurements
+2025-02-25 21:56:38,842 - INFO - Shutdown signal received
+2025-02-25 21:56:39,425 - INFO - Monitoring loop cancelled
+2025-02-25 21:56:39,425 - INFO - Monitoring stopped
+2025-02-25 21:56:39,425 - INFO - Cleaning up resources...
+2025-02-25 21:56:39,426 - INFO - Stopping monitor...
+2025-02-25 21:56:39,426 - INFO - Stopping high usage monitor
+2025-02-25 21:56:39,426 - INFO - Closing aiohttp session...
+2025-02-25 21:56:39,426 - INFO - Running 2 cleanup tasks...
+2025-02-25 21:56:39,427 - INFO - Cleaning up high usage monitor resources
+2025-02-25 21:56:39,427 - INFO - Cleanup tasks completed
+2025-02-25 21:56:39,427 - INFO - Resource cleanup complete
+2025-02-25 22:02:29,172 - ERROR - Connection error: Failed to connect to battery
+2025-02-25 22:02:29,172 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,172 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,173 - INFO - Current battery mode: 5
+2025-02-25 22:02:29,173 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,173 - INFO - Current battery SOC: 50.0%
+2025-02-25 22:02:29,173 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,173 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,173 - INFO - Setting battery mode to 2
+2025-02-25 22:02:29,173 - INFO - Successfully set battery mode to 2
+2025-02-25 22:02:29,173 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,173 - INFO - Attempting to write schedule data: [2, 420, 480, 0, 1, 1080, 1140, 256, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-02-25 22:02:29,173 - INFO - Successfully wrote schedule to battery
+2025-02-25 22:02:29,174 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,174 - INFO - Current battery mode: 5
+2025-02-25 22:02:29,174 - INFO - Switching to max self-consumption mode (SOC: 50.0%)
+2025-02-25 22:02:29,174 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,174 - INFO - Current battery mode: 5
+2025-02-25 22:02:29,174 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,174 - INFO - Setting battery mode to 2
+2025-02-25 22:02:29,174 - INFO - Successfully set battery mode to 2
+2025-02-25 22:02:29,174 - INFO - Successfully switched to max self-consumption mode
+2025-02-25 22:02:29,174 - INFO - Switching to max self-consumption mode (SOC: 9%)
+2025-02-25 22:02:29,174 - WARNING - SOC too low for discharge: 9%, minimum required: 10%
+2025-02-25 22:02:29,174 - INFO - Switching back to TOU mode
+2025-02-25 22:02:29,174 - INFO - Successfully connected to battery at 192.168.1.100:502
+2025-02-25 22:02:29,174 - INFO - Setting battery mode to 5
+2025-02-25 22:02:29,174 - INFO - Successfully set battery mode to 5
+2025-02-25 22:02:29,174 - INFO - Successfully switched back to TOU mode
+2025-02-25 22:02:29,174 - INFO - Test mode enabled - battery connections will be simulated
+2025-02-25 22:02:29,174 - INFO - Test mode enabled - battery connections will be simulated
+2025-02-25 22:02:29,175 - INFO - Currently in an active discharging period: 22:00-23:00
+2025-02-25 22:02:29,175 - INFO - Test mode enabled - battery connections will be simulated
+2025-02-25 22:02:29,176 - INFO - Test mode enabled - battery connections will be simulated
+2025-02-25 22:02:29,177 - INFO - Initializing Tibber connection...
+2025-02-25 22:02:29,177 - INFO - Connected to Tibber as: Test User
+2025-02-25 22:02:29,177 - INFO - Monitoring home: Test Address
+2025-02-25 22:02:29,177 - INFO - Initializing Tibber connection...
+2025-02-25 22:02:29,177 - INFO - Connected to Tibber as: Test User
+2025-02-25 22:02:29,177 - INFO - Monitoring home: Test Address
+2025-02-25 22:02:29,177 - INFO - Starting high usage monitor
+2025-02-25 22:02:29,194 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 22:02:32,490 - INFO - Current battery mode: 5
+2025-02-25 22:02:32,491 - INFO - Successfully connected to battery. Current mode: 5
+2025-02-25 22:02:32,491 - INFO - Starting Tibber power monitoring
+2025-02-25 22:02:32,492 - INFO - Subscribing to real-time measurements...
+2025-02-25 22:02:32,492 - INFO - Successfully subscribed to real-time measurements
+2025-02-25 22:03:42,123 - INFO - Cleaning up subscription task
+2025-02-25 22:03:42,125 - INFO - Monitoring stopped
+2025-02-25 22:03:42,126 - INFO - Cleaning up high usage monitor resources
+2025-02-25 22:27:38,518 - INFO - Starting Battery Management System
+2025-02-25 22:27:38,519 - INFO - Starting high usage monitor service
+2025-02-25 22:27:38,535 - INFO - Initializing Tibber connection...
+2025-02-25 22:27:38,535 - INFO - Initializing Tibber connection...
+2025-02-25 22:27:38,744 - INFO - Connected to Tibber as: Mina Marcus
+2025-02-25 22:27:38,805 - INFO - Monitoring home: Årdalavägen 149
+2025-02-25 22:27:38,805 - INFO - Starting monitoring...
+2025-02-25 22:27:38,805 - INFO - Starting high usage monitor
+2025-02-25 22:27:38,810 - INFO - Successfully connected to battery at 192.168.20.194:502
+2025-02-25 22:27:43,078 - INFO - Current battery mode: 5
+2025-02-25 22:27:43,079 - INFO - Successfully connected to battery. Current mode: 5
+2025-02-25 22:27:43,079 - INFO - Starting Tibber power monitoring
+2025-02-25 22:27:43,080 - INFO - Subscribing to real-time measurements...
+2025-02-25 22:27:43,639 - INFO - Successfully subscribed to real-time measurements
+2025-02-25 22:27:52,376 - INFO - Shutdown signal received
+2025-02-25 22:27:52,636 - INFO - Monitoring loop cancelled
+2025-02-25 22:27:52,636 - INFO - Monitoring stopped
+2025-02-25 22:27:52,637 - INFO - Cleaning up resources...
+2025-02-25 22:27:52,640 - INFO - Stopping monitor...
+2025-02-25 22:27:52,640 - INFO - Stopping high usage monitor
+2025-02-25 22:27:52,641 - INFO - Closing aiohttp session...
+2025-02-25 22:27:52,641 - INFO - Running 2 cleanup tasks...
+2025-02-25 22:27:52,641 - INFO - Cleaning up high usage monitor resources
+2025-02-25 22:27:52,642 - INFO - Cleanup tasks completed
+2025-02-25 22:27:52,642 - INFO - Resource cleanup complete

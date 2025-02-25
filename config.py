@@ -1,6 +1,10 @@
 import logging
 import sys
 import pytz
+import os
+
+from dotenv import load_dotenv
+load_dotenv()
 
 # Configure logging to both file and console
 logging.basicConfig(
@@ -14,7 +18,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Constants
-BATTERY_HOST = "192.168.20.194"
+BATTERY_HOST = os.getenv('BATTERY_HOST')
 PORT = 502
 TOU_REGISTER = 47255
 MAX_PERIODS = 14
@@ -44,5 +48,4 @@ MODE_REGISTER = 47086
 TOU_MODE = 5
 MAX_SELF_CONSUMPTION_MODE = 2
 
-# Load Tibber token from environment for security
-TIBBER_TOKEN = "BE4C3438E35CF2067E53A80888F7C44441D7A91C7A9D0A034EDD9D6C9115F374-1"
+TIBBER_TOKEN = os.getenv('TIBBER_TOKEN')

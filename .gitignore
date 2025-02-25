@@ -1,2 +1,3 @@
 __pycache__/
 battery_schedule.log
+.env

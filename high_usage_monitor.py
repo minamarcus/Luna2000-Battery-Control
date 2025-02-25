@@ -30,6 +30,49 @@ class BatteryModeManager:
         except Exception as e:
             logger.error(f"Error reading battery mode: {e}")
             return None
+    
+    def is_currently_discharging(self) -> bool:
+        """
+        Check if the battery is currently in an active discharging period.
+        
+        Returns:
+            bool: True if there's an active discharging period, False otherwise
+        """
+        try:
+            # Get current schedule
+            schedule = self.battery_manager.read_schedule()
+            if not schedule or 'periods' not in schedule or not schedule['periods']:
+                return False
+                
+            # Get current time and day
+            now = datetime.now(STOCKHOLM_TZ)
+            current_minutes = now.hour * 60 + now.minute
+            current_day_bit = 1 << ((now.weekday() + 1) % 7)  # Sunday=0, Monday=1, etc.
+            
+            # Check each period
+            for period in schedule['periods']:
+                # Check if period is for today
+                if not (period['days'] & current_day_bit):
+                    continue
+                    
+                # Check if period is active now
+                start_time = period['start_time']
+                end_time = period['end_time']
+                
+                # Handle midnight crossing
+                if end_time < start_time:
+                    end_time += 1440  # Add 24 hours in minutes
+                
+                if start_time <= current_minutes < end_time:
+                    # Period is active now, check if it's discharging
+                    if not period['is_charging']:
+                        logger.info(f"Currently in an active discharging period: {start_time//60:02d}:{start_time%60:02d}-{end_time//60:02d}:{end_time%60:02d}")
+                        return True
+            
+            return False
+        except Exception as e:
+            logger.error(f"Error checking if currently discharging: {e}")
+            return False
             
     def switch_to_max_self_consumption(self, soc: float) -> bool:
         """
@@ -186,8 +229,6 @@ class HighUsageMonitor:
             # Convert to kW for easier reading
             power_kw = power / 1000
             
-            logger.info(f"Power usage: {power_kw:.2f} kW")
-            
             now = datetime.now(STOCKHOLM_TZ)
             current_hour = now.hour
             
@@ -211,6 +252,13 @@ class HighUsageMonitor:
                 
                 if self.high_usage_count >= HIGH_USAGE_DURATION_THRESHOLD:
                     logger.info(f"Sustained high power usage detected: {power_kw:.2f} kW for {HIGH_USAGE_DURATION_THRESHOLD} seconds")
+                    
+                    # Check if already in a discharging period
+                    if self.battery_mode_manager.is_currently_discharging():
+                        logger.info("Battery is already in a scheduled discharging period, not switching modes")
+                        self.high_usage_count = 0
+                        return
+                    
                     # Get battery SOC
                     soc = self.battery_manager.get_soc()
                     if soc is not None and soc >= MIN_SOC_FOR_DISCHARGE:
@@ -224,6 +272,8 @@ class HighUsageMonitor:
                     self.high_usage_count = 0
         except Exception as e:
             logger.error(f"Error in Tibber callback: {e}")
+            # Reset counter on error to avoid getting stuck
+            self.high_usage_count = 0
             
     async def _run_test_mode(self) -> None:
         """Run in test mode with simulated power data."""
