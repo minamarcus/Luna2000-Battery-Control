@@ -118,7 +118,7 @@ class BatteryModeManager:
 class HighUsageMonitor:
     """Monitor for high power usage and trigger battery mode changes."""
     
-    def __init__(self, test_mode: bool = False):
+    def __init__(self, test_mode: bool = False, websession = None):
         self.battery_manager = BatteryManager(BATTERY_HOST)
         self.battery_mode_manager = BatteryModeManager(self.battery_manager)
         self.high_usage_count = 0
@@ -126,16 +126,19 @@ class HighUsageMonitor:
         self.home = None
         self.stopped = False
         self.test_mode = test_mode
+        self.websession = websession
+        self._subscription_task = None
         
         if self.test_mode:
             logger.info("Test mode enabled - battery connections will be simulated")
         
-    async def initialize_tibber(self) -> bool:
+    async def initialize_tibber(self, websession=None) -> bool:
         """Initialize the Tibber connection and home."""
         try:
             logger.info("Initializing Tibber connection...")
             self.tibber_connection = tibber.Tibber(
                 TIBBER_TOKEN, 
+                websession=websession,
                 user_agent="BatteryManagementSystem"
             )
             await self.tibber_connection.update_info()
@@ -152,8 +155,10 @@ class HighUsageMonitor:
             await self.home.update_info()
             
             # Check if real-time consumption is enabled
-            if hasattr(self.home, 'features') and hasattr(self.home.features, 'realTimeConsumptionEnabled'):
-                if not self.home.features.realTimeConsumptionEnabled:
+            features = getattr(self.home, 'features', None)
+            if features:
+                real_time_enabled = getattr(features, 'realTimeConsumptionEnabled', False)
+                if not real_time_enabled:
                     logger.error("Real-time consumption is not enabled for this home")
                     return False
             
@@ -180,6 +185,8 @@ class HighUsageMonitor:
 
             # Convert to kW for easier reading
             power_kw = power / 1000
+            
+            logger.info(f"Power usage: {power_kw:.2f} kW")
             
             now = datetime.now(STOCKHOLM_TZ)
             current_hour = now.hour
@@ -278,54 +285,135 @@ class HighUsageMonitor:
             
             # Subscribe to real-time measurements
             logger.info("Subscribing to real-time measurements...")
-            await self.home.rt_subscribe(self.tibber_callback)
-            logger.info("Successfully subscribed to real-time measurements")
+            
+            # Define a wrapper callback that checks if we're stopped
+            def wrapped_callback(pkg):
+                if self.stopped:
+                    return
+                try:
+                    self.tibber_callback(pkg)
+                except Exception as e:
+                    logger.error(f"Error in tibber callback: {e}")
+            
+            # Start the subscription
+            try:
+                subscription = await self.home.rt_subscribe(wrapped_callback)
+                self._subscription_task = subscription
+                logger.info("Successfully subscribed to real-time measurements")
+            except Exception as e:
+                logger.error(f"Error subscribing to real-time measurements: {e}")
+                raise
             
             # Keep the monitor running
             while not self.stopped:
-                await asyncio.sleep(10)
+                try:
+                    await asyncio.sleep(10)
+                    
+                    # Ensure mode maintenance happens even without Tibber updates
+                    self.battery_mode_manager.handle_mode_maintenance()
+                except asyncio.CancelledError:
+                    logger.info("Monitoring loop cancelled")
+                    break
                 
-                # Ensure mode maintenance happens even without Tibber updates
-                self.battery_mode_manager.handle_mode_maintenance()
-                
+        except asyncio.CancelledError:
+            logger.info("Real-time subscription cancelled")
+            raise
         except Exception as e:
             logger.error(f"Error in rt_subscribe: {e}")
         finally:
+            # Attempt to close any ongoing subscription
+            if hasattr(self, '_subscription_task') and self._subscription_task:
+                logger.info("Cleaning up subscription task")
+                
             logger.info("Monitoring stopped")
             
     def stop(self) -> None:
         """Stop the monitoring."""
         self.stopped = True
         logger.info("Stopping high usage monitor")
+        
+    async def cleanup(self) -> None:
+        """Clean up resources before shutdown."""
+        logger.info("Cleaning up high usage monitor resources")
+        
+        # Set stopped flag
+        self.stopped = True
+        
+        # Try to unsubscribe from Tibber
+        if hasattr(self, '_subscription_task') and self._subscription_task:
+            try:
+                if hasattr(self._subscription_task, 'unsubscribe'):
+                    logger.info("Unsubscribing from Tibber")
+                    await self._subscription_task.unsubscribe()
+            except Exception as e:
+                logger.error(f"Error unsubscribing from Tibber: {e}")
+        
+        # Close any open websocket
+        if self.home:
+            try:
+                if hasattr(self.home, '_ws') and self.home._ws:
+                    logger.info("Closing Tibber websocket connection")
+                    await self.home._ws.close()
+                    logger.info("Tibber websocket connection closed")
+                    
+                # Force cleanup the subscription if available
+                if hasattr(self.home, '_subscription'):
+                    self.home._subscription = None
+            except Exception as e:
+                logger.error(f"Error closing Tibber websocket: {e}")
+                
+        # If battery is in high usage mode, switch back to TOU
+        if self.battery_mode_manager and self.battery_mode_manager.in_high_usage_mode:
+            try:
+                logger.info("Switching battery back to TOU mode before exit")
+                self.battery_mode_manager.switch_to_tou_mode()
+            except Exception as e:
+                logger.error(f"Error switching battery mode: {e}")
 
 async def run_monitor(test_mode: bool = False) -> None:
     """Run the high usage monitor with retry logic."""
-    monitor = HighUsageMonitor(test_mode=test_mode)
+    monitor = None
     
     max_retries = MAX_RETRIES
     retry_delay = RETRY_DELAY
     
-    for attempt in range(1, max_retries + 1):
-        try:
-            # Initialize Tibber connection
-            success = await monitor.initialize_tibber()
-            if success:
-                # Start monitoring
-                await monitor.start_monitoring()
-                break
-            else:
-                logger.warning(f"Failed to initialize Tibber, retrying... (attempt {attempt}/{max_retries})")
-                await asyncio.sleep(retry_delay)
-                retry_delay *= 2  # Exponential backoff
-        except Exception as e:
-            logger.error(f"Error running high usage monitor: {e}")
-            if attempt < max_retries:
-                logger.info(f"Retrying in {retry_delay} seconds...")
-                await asyncio.sleep(retry_delay)
-                retry_delay *= 2  # Exponential backoff
-            else:
-                logger.error(f"Failed to run high usage monitor after {max_retries} attempts")
-                break
+    try:
+        monitor = HighUsageMonitor(test_mode=test_mode)
+        
+        for attempt in range(1, max_retries + 1):
+            try:
+                # Initialize Tibber connection
+                success = await monitor.initialize_tibber()
+                if success:
+                    # Start monitoring
+                    await monitor.start_monitoring()
+                    break
+                else:
+                    logger.warning(f"Failed to initialize Tibber, retrying... (attempt {attempt}/{max_retries})")
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+            except asyncio.CancelledError:
+                logger.info("Monitor cancelled during execution")
+                raise
+            except Exception as e:
+                logger.error(f"Error running high usage monitor: {e}")
+                if attempt < max_retries:
+                    logger.info(f"Retrying in {retry_delay} seconds...")
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                else:
+                    logger.error(f"Failed to run high usage monitor after {max_retries} attempts")
+                    break
+    except asyncio.CancelledError:
+        logger.info("Monitor task cancelled")
+        raise
+    finally:
+        # Clean up resources if monitor was created
+        if monitor:
+            try:
+                await monitor.cleanup()
+            except Exception as e:
+                logger.error(f"Error during cleanup: {e}")
 
 # For testing this module directly
 if __name__ == "__main__":
