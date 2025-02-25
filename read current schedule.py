@@ -31,6 +31,71 @@ def parse_period_flags(flag_value: int) -> tuple:
             
     return is_charging, active_days
 
+def read_active_power(host: str, port: int = 502):
+    """
+    Read active power from Luna2000 battery.
+    
+    Reads the active power value (INT32) from register 37113.
+    Positive values indicate feed-in to the power grid.
+    Negative values indicate supply from the power grid.
+    """
+    try:
+        # Connect to battery
+        client = ModbusTcpClient(host)
+        if not client.connect():
+            logger.error("Failed to connect to battery")
+            return False
+
+        # Read register (37113 is the Active Power register)
+        # Quantity is 2 because it's a 32-bit value
+        response = client.read_holding_registers(
+            address=37113,
+            count=2,
+            slave=1
+        )
+
+        if response.isError():
+            logger.error(f"Error reading active power register: {response}")
+            return False
+
+        # Get register data
+        data = list(response.registers)
+        
+        # Convert two 16-bit registers to one 32-bit signed integer
+        # First register is high word, second register is low word
+        active_power = (data[0] << 16) | data[1]
+        
+        # Convert to signed value if necessary (two's complement)
+        if active_power >= 2**31:
+            active_power = active_power - 2**32
+            
+        # Apply gain (which is 1 in this case)
+        # If gain were different, we'd multiply here
+        
+        # Display the result
+        if active_power > 0:
+            status = "feeding into the power grid"
+        else:
+            status = "drawing from the power grid"
+            
+        logger.info("\nActive Power:")
+        logger.info(f"  Value: {active_power} W")
+        logger.info(f"  Status: {status}")
+        
+        # Log raw data for debugging
+        logger.info("\nRaw register data:")
+        logger.info(f"  {data}")
+
+    except Exception as e:
+        logger.error(f"Error reading active power: {e}")
+        return False
+    
+    finally:
+        if 'client' in locals():
+            client.close()
+
+    return True
+
 def read_battery_schedule(host: str, port: int = 502):
     """Read and display the current schedule from Luna2000 battery."""
     try:
@@ -151,18 +216,66 @@ def read_battery_soc(host: str, port: int = 502):
 
     return True
 
+def read_working_mode(host: str, port: int = 502):
+    """Read and display working mode from Luna2000 battery."""
+    try:
+        # Connect to battery
+        client = ModbusTcpClient(host)
+        if not client.connect():
+            logger.error("Failed to connect to battery")
+            return False
+
+        response = client.read_holding_registers(
+            address=47086,
+            count=1,
+            slave=1
+        )
+
+        if response.isError():
+            logger.error(f"Error reading register: {response}")
+            return False
+
+        mode = response.registers[0]
+        # Get register data
+        data = list(response.registers)
+
+        logger.info("\nRaw register data:")
+        logger.info(f"  {mode}")
+
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        return False
+    
+    finally:
+        if 'client' in locals():
+            client.close()
+
+    return True
+
 def main():
     # Replace with your battery's IP address
     BATTERY_HOST = "192.168.20.194"
     
-    logger.info(f"Reading schedule from Luna2000 battery at {BATTERY_HOST}")
-    success = read_battery_schedule(BATTERY_HOST)
+    # logger.info(f"Reading schedule from Luna2000 battery at {BATTERY_HOST}")
+    # success = read_battery_schedule(BATTERY_HOST)
 
-    if not success:
-        sys.exit(1)
+    # if not success:
+    #     sys.exit(1)
 
-    logger.info(f"Reading SOC from Luna2000 battery at {BATTERY_HOST}")
-    success = read_battery_soc(BATTERY_HOST)
+    # logger.info(f"Reading SOC from Luna2000 battery at {BATTERY_HOST}")
+    # success = read_battery_soc(BATTERY_HOST)
+
+    # if not success:
+    #     sys.exit(1)
+    
+    # logger.info(f"Reading active power from Luna2000 battery at {BATTERY_HOST}")
+    # success = read_active_power(BATTERY_HOST)
+
+    # if not success:
+    #     sys.exit(1)
+
+    logger.info(f"Reading working mode from Luna2000 battery at {BATTERY_HOST}")
+    success = read_working_mode(BATTERY_HOST)
 
     if not success:
         sys.exit(1)

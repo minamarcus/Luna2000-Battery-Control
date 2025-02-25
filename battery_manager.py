@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional
 from pymodbus.client import ModbusTcpClient
-from config import logger, TOU_REGISTER, PORT
+from config import logger, TOU_REGISTER, PORT, MODE_REGISTER
 import time
 
 class BatteryManager:
@@ -8,6 +8,7 @@ class BatteryManager:
         self.host = host
         self.port = port
         self.TOU_REGISTER = TOU_REGISTER
+        self.MODE_REGISTER = MODE_REGISTER
 
     def connect(self) -> Optional[ModbusTcpClient]:
         """Establish connection to the battery."""
@@ -138,6 +139,82 @@ class BatteryManager:
             error_msg = f"Error reading SOC: {e}"
             logger.error(error_msg)
             raise RuntimeError(error_msg)
+        finally:
+            if client:
+                client.close()
+
+    def get_mode(self) -> Optional[int]:
+        """
+        Get the current battery charge/discharge mode.
+        
+        Returns:
+            int: Battery mode value or None if error
+        """
+        client = None
+        try:
+            client = self.connect()
+            if not client:
+                raise RuntimeError("Failed to connect to battery")
+
+            response = client.read_holding_registers(
+                address=self.MODE_REGISTER,
+                count=1,
+                slave=1
+            )
+
+            if response.isError():
+                error_msg = f"Error reading mode register: {response}"
+                logger.error(error_msg)
+                raise RuntimeError(error_msg)
+
+            mode = response.registers[0]
+            logger.info(f"Current battery mode: {mode}")
+            return mode
+
+        except Exception as e:
+            error_msg = f"Error reading battery mode: {e}"
+            logger.error(error_msg)
+            return None
+        finally:
+            if client:
+                client.close()
+
+    def set_mode(self, mode: int) -> bool:
+        """
+        Set the battery charge/discharge mode.
+        
+        Args:
+            mode: Battery mode value
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        client = None
+        try:
+            client = self.connect()
+            if not client:
+                raise RuntimeError("Failed to connect to battery")
+
+            logger.info(f"Setting battery mode to {mode}")
+            
+            response = client.write_registers(
+                address=self.MODE_REGISTER,
+                values=[mode],
+                slave=1
+            )
+
+            if response.isError():
+                error_msg = f"Error writing mode register: {response}"
+                logger.error(error_msg)
+                raise RuntimeError(error_msg)
+
+            logger.info(f"Successfully set battery mode to {mode}")
+            return True
+
+        except Exception as e:
+            error_msg = f"Error setting battery mode: {e}"
+            logger.error(error_msg)
+            return False
         finally:
             if client:
                 client.close()
