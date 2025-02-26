@@ -31,6 +31,14 @@ MAX_CHARGING_PERIODS = 3    # Maximum number of charging periods to select
 MAX_DISCHARGING_PERIODS = 4 # Maximum number of discharging periods to select
 PRICE_THRESHOLD_FACTOR = 1.5 # Price must be this times higher to replace current periods
 
+# Evening optimization configuration
+EVENING_PRICE_THRESHOLD = 1.2  # Next day prices must be 20% less than current evening prices
+BATTERY_DISCHARGE_RATE = 25.0  # Percentage of battery used per hour (configurable)
+EVENING_START_HOUR = 18  # Start hour for evening optimization (18:00)
+EVENING_END_HOUR = 22    # End hour for evening optimization (22:00)
+NEXT_DAY_START_HOUR = 6  # Start hour for next day price comparison (6:00)
+NEXT_DAY_END_HOUR = 22   # End hour for next day price comparison (22:00)
+
 # Retry configuration
 MAX_RETRIES = 3
 RETRY_DELAY = 20  # seconds

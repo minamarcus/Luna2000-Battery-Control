@@ -1,6 +1,9 @@
 from typing import Dict, List
 from datetime import datetime
-from config import MAX_MINUTES, MAX_PERIODS, PRICE_THRESHOLD_FACTOR
+from config import (
+    MAX_MINUTES, MAX_PERIODS, PRICE_THRESHOLD_FACTOR, 
+    EVENING_START_HOUR, EVENING_END_HOUR
+)
 from period_utils import get_day_bit, is_day_hour
 
 class PeriodManager:
@@ -138,3 +141,108 @@ class PeriodManager:
 
         # Check if new prices exceed the threshold factor
         return new_avg_price >= (current_avg_price * self.price_threshold_factor)
+        
+    def create_evening_periods(
+        self, 
+        current_time: datetime, 
+        hours_to_add: int, 
+        current_periods: List[Dict],
+        evening_prices: List[Dict],
+        hours_already_covered: float
+    ) -> List[Dict]:
+        """
+        Create new periods for evening optimization.
+        
+        Args:
+            current_time: Current datetime
+            hours_to_add: Number of hours to add
+            current_periods: Existing periods
+            evening_prices: Evening price data
+            hours_already_covered: Hours already covered in evening
+            
+        Returns:
+            List of new periods to add
+        """
+        if hours_to_add <= 0:
+            return []
+            
+        # Get current day bit
+        current_day_bit = 1 << ((current_time.weekday() + 1) % 7)  # Sunday=0 convention
+        
+        # Get current hour coverage status
+        hours_coverage = {hour: False for hour in range(EVENING_START_HOUR, EVENING_END_HOUR)}
+        
+        for period in current_periods:
+            # Skip if not for today
+            if not (period['days'] & current_day_bit):
+                continue
+                
+            # Skip charging periods
+            if period['is_charging']:
+                continue
+                
+            # Convert to hours for comparison
+            start_hour = period['start_time'] // 60
+            end_hour = period['end_time'] // 60
+            
+            # Handle midnight crossing
+            if end_hour <= start_hour:
+                end_hour += 24
+                
+            # Mark which evening hours are covered
+            for hour in range(EVENING_START_HOUR, EVENING_END_HOUR):
+                if start_hour <= hour < end_hour:
+                    hours_coverage[hour] = True
+        
+        # Sort evening hours by price (highest first)
+        sorted_hours = sorted(
+            [(hour, next((p['SEK_per_kWh'] for p in evening_prices if p['hour'] == hour), 0)) 
+             for hour in range(EVENING_START_HOUR, EVENING_END_HOUR) if not hours_coverage[hour]],
+            key=lambda x: x[1],
+            reverse=True
+        )
+        
+        # Take the top N hours based on hours_to_add
+        best_hours = sorted_hours[:hours_to_add]
+        
+        if not best_hours:
+            return []
+            
+        # Sort by hour for period creation
+        best_hours.sort(key=lambda x: x[0])
+        
+        # Create periods
+        new_periods = []
+        current_start = None
+        current_end = None
+        
+        # Helper to add a completed period
+        def add_period():
+            if current_start is not None and current_end is not None:
+                new_periods.append(
+                    self.create_period(
+                        start_hour=current_start,
+                        end_hour=current_end,
+                        is_charging=False,  # Discharging for evening
+                        day_bit=current_day_bit
+                    )
+                )
+        
+        # Process hours to create consolidated periods
+        for hour, _ in best_hours:
+            if current_start is None:
+                current_start = hour
+                current_end = hour + 1
+            elif hour == current_end:
+                # Extend the current period
+                current_end = hour + 1
+            else:
+                # Add the completed period and start a new one
+                add_period()
+                current_start = hour
+                current_end = hour + 1
+        
+        # Add the final period
+        add_period()
+        
+        return new_periods
