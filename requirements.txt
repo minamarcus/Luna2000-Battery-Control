@@ -1,0 +1,20 @@
+# Core dependencies
+pymodbus>=3.0.0
+pytz>=2022.1
+python-dotenv>=0.20.0
+
+# HTTP and API libraries
+requests>=2.27.1
+aiohttp>=3.8.1
+pytibber>=0.30.8  # For Tibber API integration
+
+# Data processing
+pandas>=1.4.2
+
+# Async utilities
+asyncio>=3.4.3
+
+# Optional but recommended
+psutil>=5.9.0  # For system monitoring
+retry>=0.9.2   # For robust retries
+colorama>=0.4.4  # For colored terminal output

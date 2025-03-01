@@ -1,7 +1,8 @@
 import asyncio
 import time
 import logging
-from datetime import datetime
+import math
+from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 import aiohttp
 import tibber
@@ -161,7 +162,7 @@ class BatteryModeManager:
 class HighUsageMonitor:
     """Monitor for high power usage and trigger battery mode changes."""
     
-    def __init__(self, test_mode: bool = False, websession = None):
+    def __init__(self, test_mode: bool = False, websession = None, live_display: bool = True):
         self.battery_manager = BatteryManager(BATTERY_HOST)
         self.battery_mode_manager = BatteryModeManager(self.battery_manager)
         self.high_usage_count = 0
@@ -171,6 +172,14 @@ class HighUsageMonitor:
         self.test_mode = test_mode
         self.websession = websession
         self._subscription_task = None
+        self._reconnect_task = None
+        self._last_data_time = None
+        self._connection_active = False
+        self._reconnect_attempt = 0
+        self._max_reconnect_delay = 300  # 5 minutes max delay
+        self.live_display = live_display
+        self.current_power_kw = 0.0
+        self.display_active = False
         
         if self.test_mode:
             logger.info("Test mode enabled - battery connections will be simulated")
@@ -211,9 +220,41 @@ class HighUsageMonitor:
             logger.error(f"Error initializing Tibber: {e}")
             return False
             
+    def _update_live_display(self, power_kw: float):
+        """Update the live display on the terminal with just power usage."""
+        if not self.live_display:
+            return
+            
+        now = datetime.now().strftime("%H:%M:%S")
+        status = "HIGH" if power_kw >= HIGH_USAGE_THRESHOLD else "Normal"
+        
+        # Store current power reading
+        self.current_power_kw = power_kw
+        
+        # Create the display string - use carriage return to stay on same line
+        display = f"\r[{now}] Power: {power_kw:.2f} kW | Status: {status}"
+        
+        # Pad with spaces to clear any previous longer output
+        display = display.ljust(60)
+        
+        # Print without newline and flush to ensure immediate display
+        print(display, end='', flush=True)
+        self.display_active = True
+        
+    def _print_newline_if_needed(self):
+        """Print a newline if the live display is active to avoid overwriting."""
+        if self.display_active and self.live_display:
+            print()  # Add a newline
+            self.display_active = False
+    
     def tibber_callback(self, package: Dict[str, Any]) -> None:
         """Callback function for real-time Tibber data."""
         try:
+            # Update last data timestamp
+            self._last_data_time = datetime.now()
+            self._connection_active = True
+            self._reconnect_attempt = 0  # Reset reconnection attempts on successful data
+            
             data = package.get("data")
             if data is None:
                 return
@@ -228,6 +269,9 @@ class HighUsageMonitor:
 
             # Convert to kW for easier reading
             power_kw = power / 1000
+            
+            # Update the live display with just power reading
+            self._update_live_display(power_kw)
             
             now = datetime.now(STOCKHOLM_TZ)
             current_hour = now.hour
@@ -245,12 +289,18 @@ class HighUsageMonitor:
             # Check for high usage
             if power_kw >= HIGH_USAGE_THRESHOLD:
                 if self.high_usage_count == 0:
+                    self._print_newline_if_needed()
                     logger.info(f"Detected high power usage: {power_kw:.2f} kW")
                 
                 self.high_usage_count += 1
-                logger.info(f"High power usage continues: {power_kw:.2f} kW (count: {self.high_usage_count}/{HIGH_USAGE_DURATION_THRESHOLD})")
+                
+                # Only log every few counts to reduce spam
+                if self.high_usage_count % 3 == 0 or self.high_usage_count == HIGH_USAGE_DURATION_THRESHOLD:
+                    self._print_newline_if_needed()
+                    logger.info(f"High power usage continues: {power_kw:.2f} kW (count: {self.high_usage_count}/{HIGH_USAGE_DURATION_THRESHOLD})")
                 
                 if self.high_usage_count >= HIGH_USAGE_DURATION_THRESHOLD:
+                    self._print_newline_if_needed()
                     logger.info(f"Sustained high power usage detected: {power_kw:.2f} kW for {HIGH_USAGE_DURATION_THRESHOLD} seconds")
                     
                     # Check if already in a discharging period
@@ -259,7 +309,7 @@ class HighUsageMonitor:
                         self.high_usage_count = 0
                         return
                     
-                    # Get battery SOC
+                    # Get battery SOC - only query the battery when actually needed
                     soc = self.battery_manager.get_soc()
                     if soc is not None and soc >= MIN_SOC_FOR_DISCHARGE:
                         self.battery_mode_manager.switch_to_max_self_consumption(soc)
@@ -268,30 +318,145 @@ class HighUsageMonitor:
                     self.high_usage_count = 0
             else:
                 if self.high_usage_count > 0:
+                    self._print_newline_if_needed()
                     logger.info(f"Power usage returned to normal: {power_kw:.2f} kW")
                     self.high_usage_count = 0
         except Exception as e:
+            self._print_newline_if_needed()
             logger.error(f"Error in Tibber callback: {e}")
             # Reset counter on error to avoid getting stuck
             self.high_usage_count = 0
+    
+    async def _monitor_connection(self):
+        """Monitor the connection and reconnect if needed."""
+        while not self.stopped:
+            try:
+                # Skip connection monitoring if we're in test mode
+                if self.test_mode:
+                    await asyncio.sleep(10)
+                    continue
+                
+                # Check if we have a recent data point
+                now = datetime.now()
+                if (self._last_data_time is not None and 
+                    self._connection_active and 
+                    (now - self._last_data_time) > timedelta(minutes=5)):
+                    
+                    logger.warning(f"No data received for over 5 minutes, connection may be stale")
+                    self._connection_active = False
+                    
+                    # Trigger reconnect
+                    if self._subscription_task:
+                        # Cancel existing subscription
+                        if hasattr(self._subscription_task, 'unsubscribe'):
+                            try:
+                                await self._subscription_task.unsubscribe()
+                            except Exception as e:
+                                logger.error(f"Error unsubscribing: {e}")
+                        
+                        # Close websocket if available
+                        if self.home and hasattr(self.home, '_ws') and self.home._ws:
+                            try:
+                                self._print_newline_if_needed()
+                                logger.info("Connection lost, attempting to close and reconnect...")
+                                await self.home._ws.close()
+                            except Exception as e:
+                                self._print_newline_if_needed()
+                                logger.error(f"Error closing websocket: {e}")
+                    
+                    # Schedule reconnection with backoff
+                    if not self._reconnect_task or self._reconnect_task.done():
+                        self._reconnect_task = asyncio.create_task(self._reconnect_with_backoff())
+                
+                # Check every 30 seconds
+                await asyncio.sleep(30)
+                
+            except asyncio.CancelledError:
+                logger.info("Connection monitor cancelled")
+                break
+            except Exception as e:
+                logger.error(f"Error in connection monitoring: {e}")
+                await asyncio.sleep(30)  # Wait before next check
+    
+    async def _reconnect_with_backoff(self):
+        """Attempt to reconnect with exponential backoff."""
+        # Calculate backoff delay
+        self._reconnect_attempt += 1
+        delay = min(RETRY_DELAY * (2 ** (self._reconnect_attempt - 1)), self._max_reconnect_delay)
+        
+        logger.info(f"Scheduling reconnection attempt {self._reconnect_attempt} in {delay} seconds")
+        await asyncio.sleep(delay)
+        
+        try:
+            logger.info(f"Attempting to reconnect (attempt {self._reconnect_attempt})")
+            
+            # Re-initialize Tibber if needed
+            if not self.tibber_connection or not self.home:
+                success = await self.initialize_tibber(self.websession)
+                if not success:
+                    logger.error("Failed to re-initialize Tibber connection")
+                    return
+            
+            # Start a new subscription
+            logger.info("Starting new Tibber subscription")
+            
+            # Define wrapper callback
+            def wrapped_callback(pkg):
+                if self.stopped:
+                    return
+                try:
+                    self.tibber_callback(pkg)
+                except Exception as e:
+                    logger.error(f"Error in tibber callback: {e}")
+            
+            # Create new subscription
+            self._subscription_task = await self.home.rt_subscribe(wrapped_callback)
+            logger.info("Successfully reconnected to Tibber")
+            self._connection_active = True
+            self._last_data_time = datetime.now()
+            
+        except Exception as e:
+            logger.error(f"Error during reconnection: {e}")
+            # No need to reschedule here, the monitor will do it if needed
             
     async def _run_test_mode(self) -> None:
         """Run in test mode with simulated power data."""
+        self._print_newline_if_needed()
         logger.info("Running in test mode with simulated power data")
         
         # Simulate alternating normal and high usage patterns
+        test_start_time = time.time()
+        
         while not self.stopped:
-            # Simulate high usage
-            logger.info("Detected high power usage: 10.00 kW")
-            for i in range(HIGH_USAGE_DURATION_THRESHOLD):
-                if self.stopped:
-                    break
-                    
+            # Simulate varying power levels
+            elapsed = time.time() - test_start_time
+            # Create a sine wave pattern between 2.0 and 12.0 kW
+            base_power = 7.0  # Average power
+            amplitude = 5.0  # How much it varies by
+            period = 60.0  # Complete cycle in seconds
+            
+            # Calculate simulated power using sine wave
+            power_kw = base_power + amplitude * math.sin(2 * math.pi * elapsed / period)
+            
+            # Update live display with just power
+            self._update_live_display(power_kw)
+            
+            # Check for high usage
+            if power_kw >= HIGH_USAGE_THRESHOLD:
+                if self.high_usage_count == 0:
+                    self._print_newline_if_needed()
+                    logger.info(f"Detected high power usage: {power_kw:.2f} kW")
+                
                 self.high_usage_count += 1
-                logger.info(f"High power usage continues: 10.00 kW (count: {self.high_usage_count}/{HIGH_USAGE_DURATION_THRESHOLD})")
+                
+                # Log periodically
+                if self.high_usage_count % 3 == 0:
+                    self._print_newline_if_needed()
+                    logger.info(f"High power usage continues: {power_kw:.2f} kW (count: {self.high_usage_count}/{HIGH_USAGE_DURATION_THRESHOLD})")
                 
                 if self.high_usage_count >= HIGH_USAGE_DURATION_THRESHOLD:
-                    logger.info(f"Sustained high power usage detected: 10.00 kW for {HIGH_USAGE_DURATION_THRESHOLD} seconds")
+                    self._print_newline_if_needed()
+                    logger.info(f"Sustained high power usage detected: {power_kw:.2f} kW for {HIGH_USAGE_DURATION_THRESHOLD} seconds")
                     soc = 50.0  # Simulate SOC in test mode
                     logger.info(f"Switching to max self-consumption mode (SOC: {soc}%)")
                     logger.info("TEST MODE: Simulating battery mode switch")
@@ -299,21 +464,17 @@ class HighUsageMonitor:
                     self.battery_mode_manager.mode_switch_time = time.time()
                     logger.info("Successfully switched to max self-consumption mode")
                     self.high_usage_count = 0
-                    break
-                    
-                await asyncio.sleep(1)
-                
-            # Wait a bit before next cycle
-            await asyncio.sleep(10)
-            
-            # Simulate normal usage
-            logger.info("Power usage returned to normal: 4.00 kW")
+            else:
+                if self.high_usage_count > 0:
+                    self._print_newline_if_needed()
+                    logger.info(f"Power usage returned to normal: {power_kw:.2f} kW")
+                    self.high_usage_count = 0
             
             # Handle mode maintenance
             self.battery_mode_manager.handle_mode_maintenance()
             
-            # Wait a bit before next cycle
-            await asyncio.sleep(10)
+            # Wait before updating again
+            await asyncio.sleep(1)
             
     async def start_monitoring(self) -> None:
         """Start the real-time monitoring."""
@@ -347,12 +508,16 @@ class HighUsageMonitor:
             
             # Start the subscription
             try:
-                subscription = await self.home.rt_subscribe(wrapped_callback)
-                self._subscription_task = subscription
+                self._subscription_task = await self.home.rt_subscribe(wrapped_callback)
                 logger.info("Successfully subscribed to real-time measurements")
+                self._connection_active = True
+                self._last_data_time = datetime.now()
             except Exception as e:
                 logger.error(f"Error subscribing to real-time measurements: {e}")
                 raise
+            
+            # Start the connection monitor
+            connection_monitor = asyncio.create_task(self._monitor_connection())
             
             # Keep the monitor running
             while not self.stopped:
@@ -364,6 +529,10 @@ class HighUsageMonitor:
                 except asyncio.CancelledError:
                     logger.info("Monitoring loop cancelled")
                     break
+                
+            # Cancel connection monitor if we're exiting
+            if not connection_monitor.done():
+                connection_monitor.cancel()
                 
         except asyncio.CancelledError:
             logger.info("Real-time subscription cancelled")
@@ -389,6 +558,10 @@ class HighUsageMonitor:
         # Set stopped flag
         self.stopped = True
         
+        # Cancel reconnect task if running
+        if hasattr(self, '_reconnect_task') and self._reconnect_task and not self._reconnect_task.done():
+            self._reconnect_task.cancel()
+            
         # Try to unsubscribe from Tibber
         if hasattr(self, '_subscription_task') and self._subscription_task:
             try:
@@ -420,7 +593,7 @@ class HighUsageMonitor:
             except Exception as e:
                 logger.error(f"Error switching battery mode: {e}")
 
-async def run_monitor(test_mode: bool = False) -> None:
+async def run_monitor(test_mode: bool = False, live_display: bool = True) -> None:
     """Run the high usage monitor with retry logic."""
     monitor = None
     
@@ -428,7 +601,7 @@ async def run_monitor(test_mode: bool = False) -> None:
     retry_delay = RETRY_DELAY
     
     try:
-        monitor = HighUsageMonitor(test_mode=test_mode)
+        monitor = HighUsageMonitor(test_mode=test_mode, live_display=live_display)
         
         for attempt in range(1, max_retries + 1):
             try:
@@ -467,6 +640,14 @@ async def run_monitor(test_mode: bool = False) -> None:
 
 # For testing this module directly
 if __name__ == "__main__":
+    import argparse
+    
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Run high usage monitor')
+    parser.add_argument('--test', action='store_true', help='Run in test mode with simulated data')
+    parser.add_argument('--no-display', action='store_true', help='Disable live power display')
+    args = parser.parse_args()
+    
     # Setup logging for standalone testing
     logging.basicConfig(
         level=logging.INFO,
@@ -474,5 +655,5 @@ if __name__ == "__main__":
         handlers=[logging.StreamHandler()]
     )
     
-    # Run in test mode
-    asyncio.run(run_monitor(test_mode=True))
+    # Run the monitor
+    asyncio.run(run_monitor(test_mode=args.test, live_display=not args.no_display))
