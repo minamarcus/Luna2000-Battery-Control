@@ -4,16 +4,19 @@ from datetime import datetime, timedelta
 from config import (
     logger, EVENING_START_HOUR, EVENING_END_HOUR, 
     NEXT_DAY_START_HOUR, NEXT_DAY_END_HOUR,
-    BATTERY_DISCHARGE_RATE, MIN_SOC_FOR_DISCHARGE
+    BATTERY_DISCHARGE_RATE, MIN_SOC_FOR_DISCHARGE,
+    ENABLE_SOLAR_FORECAST, SOLAR_FORECAST_THRESHOLD
 )
 from period_utils import is_day_hour, get_day_bit
 from period_manager import PeriodManager
+from solar_forecast import SolarForecast  # Import the new SolarForecast class
 
 class OptimizationManager:
     def __init__(self, max_charging_periods: int, max_discharging_periods: int):
         self.max_charging_periods = max_charging_periods
         self.max_discharging_periods = max_discharging_periods
         self.period_manager = PeriodManager()
+        self.solar_forecast = SolarForecast()  # Initialize the solar forecast
 
     def get_night_prices(self, today_prices: List[Dict], tomorrow_prices: List[Dict]) -> List[Dict]:
         """Get prices for night hours (22:00-06:00)."""
@@ -33,6 +36,11 @@ class OptimizationManager:
 
     def process_charging_periods(self, night_prices: List[Dict], target_date: datetime) -> List[Dict]:
         """Process and create charging periods for night hours."""
+        # Check if we should skip night charging based on solar forecast
+        if ENABLE_SOLAR_FORECAST and self.solar_forecast.should_skip_night_charging():
+            logger.info("Skipping night charging due to high solar forecast for tomorrow")
+            return []  # Return empty list to skip night charging
+        
         selected_prices = sorted(night_prices[:self.max_charging_periods], key=lambda x: x['hour'])
         
         periods = []

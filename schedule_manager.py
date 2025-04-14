@@ -1,18 +1,18 @@
 from datetime import datetime, timedelta
 import time
-from typing import List, Dict, Optional, Tuple
 from config import (
     logger, MAX_PERIODS, STOCKHOLM_TZ,
     MAX_CHARGING_PERIODS, MAX_DISCHARGING_PERIODS,
     MAX_RETRIES, RETRY_DELAY, EVENING_PRICE_THRESHOLD,
-    BATTERY_DISCHARGE_RATE, EVENING_START_HOUR, EVENING_END_HOUR,
-    NEXT_DAY_START_HOUR, NEXT_DAY_END_HOUR, MIN_SOC_FOR_DISCHARGE
+    EVENING_START_HOUR, EVENING_END_HOUR, MIN_SOC_FOR_DISCHARGE,
+    ENABLE_SOLAR_FORECAST, SOLAR_FORECAST_THRESHOLD
 )
 from battery_manager import BatteryManager
 from optimization_manager import OptimizationManager
 from period_manager import PeriodManager
 from price_fetcher import PriceFetcher
 from schedule_data_manager import ScheduleDataManager
+from solar_forecast import SolarForecast  
 
 class ScheduleManager:
     def __init__(self, battery_host: str):
@@ -25,7 +25,8 @@ class ScheduleManager:
             MAX_DISCHARGING_PERIODS
         )
         self.stockholm_tz = STOCKHOLM_TZ
-
+        self.solar_forecast = SolarForecast()  # Initialize the solar forecast
+        
     def update_schedule(self) -> bool:
         """Main function to update the schedule with retries."""
         for attempt in range(MAX_RETRIES):
@@ -45,6 +46,13 @@ class ScheduleManager:
                 tomorrow = now + timedelta(days=1)
                 
                 logger.info(f"Updating schedule at {now} (Current SOC: {current_soc}%)")
+                
+                # Get solar forecast for tomorrow if enabled
+                if ENABLE_SOLAR_FORECAST:
+                    total_solar_kwh, _ = self.solar_forecast.get_next_day_forecast()
+                    skip_night_charging = total_solar_kwh >= SOLAR_FORECAST_THRESHOLD
+                    logger.info(f"Solar forecast for tomorrow: {total_solar_kwh:.2f} kWh")
+                    logger.info(f"Night charging strategy: {'Skip' if skip_night_charging else 'Proceed with'} night charging")
                 
                 # Get current schedule
                 current_periods = self.schedule_data_manager.clean_schedule(current_schedule, now)
