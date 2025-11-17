@@ -9,88 +9,193 @@ from config import (
 )
 from period_utils import is_day_hour, get_day_bit
 from period_manager import PeriodManager
-from solar_forecast import SolarForecast  # Import the new SolarForecast class
+from solar_forecast import SolarForecast
 
 class OptimizationManager:
     def __init__(self, max_charging_periods: int, max_discharging_periods: int):
         self.max_charging_periods = max_charging_periods
         self.max_discharging_periods = max_discharging_periods
         self.period_manager = PeriodManager()
-        self.solar_forecast = SolarForecast()  # Initialize the solar forecast
+        self.solar_forecast = SolarForecast()
+
+    def aggregate_to_hourly(self, prices: List[Dict]) -> List[Dict]:
+        """
+        Aggregate 15-minute price data to hourly averages.
+        
+        Args:
+            prices: List of price dictionaries with 'hour' and 'SEK_per_kWh'
+            
+        Returns:
+            List of hourly aggregated prices
+        """
+        if not prices:
+            return []
+        
+        # Group by hour and calculate average
+        df = pd.DataFrame(prices)
+        hourly = df.groupby('hour', as_index=False).agg({
+            'SEK_per_kWh': 'mean',
+            'time_start': 'first'  # Keep the first time_start for the hour
+        })
+        
+        return hourly.to_dict('records')
 
     def get_night_prices(self, today_prices: List[Dict], tomorrow_prices: List[Dict]) -> List[Dict]:
-        """Get prices for night hours (22:00-06:00)."""
+        """Get prices for night hours (22:00-06:00), aggregated to hourly."""
+        # First aggregate to hourly
+        today_hourly = self.aggregate_to_hourly(today_prices)
+        tomorrow_hourly = self.aggregate_to_hourly(tomorrow_prices)
+        
         night_prices = []
         
         # Add today's late evening hours (22:00-23:59)
-        for price in today_prices:
+        for price in today_hourly:
             if price['hour'] >= 22:
                 night_prices.append(price)
                 
         # Add tomorrow's early morning hours (00:00-06:00)
-        for price in tomorrow_prices:
+        for price in tomorrow_hourly:
             if price['hour'] <= 6:
                 night_prices.append(price)
                 
         return sorted(night_prices, key=lambda x: x['SEK_per_kWh'])
 
     def process_charging_periods(self, night_prices: List[Dict], target_date: datetime) -> List[Dict]:
-        """Process and create charging periods for night hours."""
+        """Process and create charging periods for night hours. Groups consecutive hours into single periods."""
         # Check if we should skip night charging based on solar forecast
         if ENABLE_SOLAR_FORECAST and self.solar_forecast.should_skip_night_charging():
             logger.info("Skipping night charging due to high solar forecast for tomorrow")
-            return []  # Return empty list to skip night charging
+            return []
         
-        selected_prices = sorted(night_prices[:self.max_charging_periods], key=lambda x: x['hour'])
+        # Take only the cheapest N hours
+        selected_prices = night_prices[:self.max_charging_periods]
         
+        if not selected_prices:
+            return []
+        
+        # Log selected hours
+        hours_info = ', '.join([f"Hour {p['hour']}: {p['SEK_per_kWh']:.4f} SEK/kWh" for p in selected_prices])
+        logger.info(f"Selected {len(selected_prices)} cheapest charging hours: {hours_info}")
+        
+        # Sort by hour for grouping
+        selected_prices = sorted(selected_prices, key=lambda x: x['hour'])
+        
+        # Group consecutive hours
+        groups = []
+        current_group = [selected_prices[0]]
+        
+        for i in range(1, len(selected_prices)):
+            prev_hour = selected_prices[i-1]['hour']
+            curr_hour = selected_prices[i]['hour']
+            
+            # Check if consecutive (handle midnight crossing: 23 -> 0, 0 -> 1, etc.)
+            is_consecutive = (curr_hour == (prev_hour + 1) % 24) or (prev_hour == 23 and curr_hour == 0) or (prev_hour == 6 and curr_hour == 22)
+            
+            if is_consecutive:
+                current_group.append(selected_prices[i])
+            else:
+                groups.append(current_group)
+                current_group = [selected_prices[i]]
+        
+        groups.append(current_group)
+        
+        logger.info(f"Grouped into {len(groups)} charging periods")
+        
+        # Create ONE period per group
         periods = []
-        for price in selected_prices:
-            period_date = target_date - timedelta(days=1) if price['hour'] >= 22 else target_date
+        for group in groups:
+            start_hour = group[0]['hour']
+            end_hour = (group[-1]['hour'] + 1) % 24
+            
+            # Determine which day this period belongs to
+            period_date = target_date - timedelta(days=1) if start_hour >= 22 else target_date
             day_bit = get_day_bit(period_date)
             
-            periods.append(
-                self.period_manager.create_period(
-                    start_hour=price['hour'],
-                    end_hour=(price['hour'] + 1) % 24,
-                    is_charging=True,
-                    day_bit=day_bit
-                )
+            period = self.period_manager.create_period(
+                start_hour=start_hour,
+                end_hour=end_hour,
+                is_charging=True,
+                day_bit=day_bit
             )
+            periods.append(period)
         
-        return self.period_manager.combine_consecutive_periods(periods)
+        return periods
 
     def process_discharging_periods(self, df: pd.DataFrame, day_bit: int) -> List[Dict]:
-        """Process and create periods for discharging during daytime."""
-        day_df = df[df['hour'].apply(is_day_hour)]
+        """Process and create periods for discharging during daytime. Groups consecutive hours into single periods."""
+        # First, aggregate to hourly averages if we have sub-hourly data
+        hourly_df = df.groupby('hour', as_index=False).agg({
+            'SEK_per_kWh': 'mean'
+        })
+        
+        # Filter for daytime hours
+        day_df = hourly_df[hourly_df['hour'].apply(is_day_hour)]
+        
+        logger.info(f"Found {len(day_df)} daytime hours for discharge analysis")
+        
+        # Get the top N most expensive hours
         best_hours_df = day_df.nlargest(self.max_discharging_periods, 'SEK_per_kWh')
         selected_hours = sorted(best_hours_df['hour'].tolist())
         
-        periods = []
-        for hour in selected_hours:
-            periods.append(
-                self.period_manager.create_period(
-                    start_hour=hour,
-                    end_hour=(hour + 1) % 24,
-                    is_charging=False,
-                    day_bit=day_bit
-                )
-            )
+        # Log selected hours
+        hours_info = ', '.join([
+            f"Hour {h}: {best_hours_df[best_hours_df['hour']==h]['SEK_per_kWh'].values[0]:.4f} SEK/kWh" 
+            for h in selected_hours
+        ])
+        logger.info(f"Selected {len(selected_hours)} most expensive discharge hours: {hours_info}")
         
-        return self.period_manager.combine_consecutive_periods(periods)
+        if not selected_hours:
+            return []
+        
+        # Group consecutive hours
+        groups = []
+        current_group = [selected_hours[0]]
+        
+        for i in range(1, len(selected_hours)):
+            if selected_hours[i] == selected_hours[i-1] + 1:
+                current_group.append(selected_hours[i])
+            else:
+                groups.append(current_group)
+                current_group = [selected_hours[i]]
+        
+        groups.append(current_group)
+        
+        logger.info(f"Grouped into {len(groups)} discharge periods")
+        
+        # Create ONE period per group
+        periods = []
+        for group in groups:
+            start_hour = group[0]
+            end_hour = group[-1] + 1
+            
+            period = self.period_manager.create_period(
+                start_hour=start_hour,
+                end_hour=end_hour,
+                is_charging=False,
+                day_bit=day_bit
+            )
+            periods.append(period)
+        
+        return periods
 
     def find_optimal_periods(self, today_prices: List[Dict], 
                            tomorrow_prices: List[Dict],
                            target_date: datetime) -> Tuple[List[Dict], List[Dict]]:
-        """Find optimal charging and discharging periods."""
+        """Find optimal charging and discharging periods. Returns properly grouped periods with no duplicates."""
         night_prices = self.get_night_prices(today_prices, tomorrow_prices)
         charging_periods = self.process_charging_periods(night_prices, target_date)
 
-        day_df = pd.DataFrame(tomorrow_prices)
+        # Aggregate tomorrow's prices to hourly before processing
+        tomorrow_hourly = self.aggregate_to_hourly(tomorrow_prices)
+        day_df = pd.DataFrame(tomorrow_hourly)
+        
         discharging_periods = self.process_discharging_periods(
             day_df, 
             get_day_bit(target_date)
         )
 
+        logger.info(f"Returning {len(charging_periods)} charging + {len(discharging_periods)} discharging periods")
+        
         return charging_periods, discharging_periods
     
     def calculate_evening_coverage(self, current_periods: List[Dict], today_prices: List[Dict]) -> Tuple[List[Dict], float]:
@@ -108,8 +213,11 @@ class OptimizationManager:
         now = datetime.now()
         current_day_bit = 1 << ((now.weekday() + 1) % 7)  # Sunday=0 convention
         
+        # Aggregate to hourly if needed
+        hourly_prices = self.aggregate_to_hourly(today_prices)
+        
         # Filter prices for evening hours
-        evening_prices = [p for p in today_prices if EVENING_START_HOUR <= p['hour'] < EVENING_END_HOUR]
+        evening_prices = [p for p in hourly_prices if EVENING_START_HOUR <= p['hour'] < EVENING_END_HOUR]
         
         # Track coverage by hour
         hours_coverage = {hour: False for hour in range(EVENING_START_HOUR, EVENING_END_HOUR)}
@@ -156,8 +264,11 @@ class OptimizationManager:
         Returns:
             Average price for the next day
         """
+        # Aggregate to hourly first
+        hourly_prices = self.aggregate_to_hourly(tomorrow_prices)
+        
         relevant_prices = [
-            p['SEK_per_kWh'] for p in tomorrow_prices 
+            p['SEK_per_kWh'] for p in hourly_prices 
             if NEXT_DAY_START_HOUR <= p['hour'] < NEXT_DAY_END_HOUR
         ]
         

@@ -37,30 +37,6 @@ class PeriodManager:
             'is_charging': is_charging
         }
 
-    def combine_consecutive_periods(self, periods: List[Dict]) -> List[Dict]:
-        """Combine consecutive periods with the same charging state."""
-        if not periods:
-            return []
-            
-        sorted_periods = sorted(periods, key=lambda x: x['start_time'])
-        combined = []
-        current_period = sorted_periods[0].copy()
-        
-        for next_period in sorted_periods[1:]:
-            current_end_hour = current_period['end_time'] // 60
-            next_start_hour = next_period['start_time'] // 60
-            
-            if (current_end_hour % 24 == next_start_hour % 24 and 
-                current_period['is_charging'] == next_period['is_charging'] and
-                current_period['days'] == next_period['days']):
-                current_period['end_time'] = next_period['end_time']
-            else:
-                combined.append(current_period)
-                current_period = next_period.copy()
-        
-        combined.append(current_period)
-        return combined
-
     def check_overlap(self, period1: Dict, period2: Dict) -> bool:
         """Check if two periods overlap in both time and day."""
         common_days = period1['days'] & period2['days']
@@ -109,7 +85,10 @@ class PeriodManager:
         current_prices = []
         for period in current_discharge_periods:
             start_hour = period['start_time'] // 60
-            for hour in range(start_hour, (period['end_time'] // 60) % 24 + 1):
+            end_hour = period['end_time'] // 60
+            if end_hour <= start_hour:
+                end_hour += 24
+            for hour in range(start_hour, end_hour):
                 hour_price = next(
                     (p['SEK_per_kWh'] for p in prices['today'] if p['hour'] == hour % 24),
                     None
@@ -126,7 +105,10 @@ class PeriodManager:
         new_prices = []
         for period in new_discharging_periods:
             start_hour = period['start_time'] // 60
-            for hour in range(start_hour, (period['end_time'] // 60) % 24 + 1):
+            end_hour = period['end_time'] // 60
+            if end_hour <= start_hour:
+                end_hour += 24
+            for hour in range(start_hour, end_hour):
                 hour_price = next(
                     (p['SEK_per_kWh'] for p in prices['tomorrow'] if p['hour'] == hour % 24),
                     None
@@ -151,7 +133,7 @@ class PeriodManager:
         hours_already_covered: float
     ) -> List[Dict]:
         """
-        Create new periods for evening optimization.
+        Create new periods for evening optimization. Groups consecutive hours into single periods.
         
         Args:
             current_time: Current datetime
@@ -203,46 +185,40 @@ class PeriodManager:
         )
         
         # Take the top N hours based on hours_to_add
-        best_hours = sorted_hours[:hours_to_add]
+        best_hours = [h[0] for h in sorted_hours[:hours_to_add]]
         
         if not best_hours:
             return []
             
-        # Sort by hour for period creation
-        best_hours.sort(key=lambda x: x[0])
+        # Sort by hour for grouping
+        best_hours.sort()
         
-        # Create periods
-        new_periods = []
-        current_start = None
-        current_end = None
+        # Group consecutive hours
+        groups = []
+        current_group = [best_hours[0]]
         
-        # Helper to add a completed period
-        def add_period():
-            if current_start is not None and current_end is not None:
-                new_periods.append(
-                    self.create_period(
-                        start_hour=current_start,
-                        end_hour=current_end,
-                        is_charging=False,  # Discharging for evening
-                        day_bit=current_day_bit
-                    )
-                )
-        
-        # Process hours to create consolidated periods
-        for hour, _ in best_hours:
-            if current_start is None:
-                current_start = hour
-                current_end = hour + 1
-            elif hour == current_end:
-                # Extend the current period
-                current_end = hour + 1
+        for i in range(1, len(best_hours)):
+            if best_hours[i] == best_hours[i-1] + 1:
+                current_group.append(best_hours[i])
             else:
-                # Add the completed period and start a new one
-                add_period()
-                current_start = hour
-                current_end = hour + 1
+                groups.append(current_group)
+                current_group = [best_hours[i]]
         
-        # Add the final period
-        add_period()
+        groups.append(current_group)
+        
+        # Create ONE period per group
+        new_periods = []
+        for group in groups:
+            start_hour = group[0]
+            end_hour = group[-1] + 1
+            
+            new_periods.append(
+                self.create_period(
+                    start_hour=start_hour,
+                    end_hour=end_hour,
+                    is_charging=False,
+                    day_bit=current_day_bit
+                )
+            )
         
         return new_periods

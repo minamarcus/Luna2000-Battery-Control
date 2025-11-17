@@ -27,8 +27,8 @@ STOCKHOLM_TZ = pytz.timezone('Europe/Stockholm')
 API_BASE_URL = "https://www.elprisetjustnu.se/api/v1/prices"
 
 # Schedule configuration
-MAX_CHARGING_PERIODS = 1    # Maximum number of charging periods to select
-MAX_DISCHARGING_PERIODS = 12 # Maximum number of discharging periods to select
+MAX_CHARGING_PERIODS = 4    # Maximum number of charging periods to select
+MAX_DISCHARGING_PERIODS = 4 # Maximum number of discharging periods to select
 PRICE_THRESHOLD_FACTOR = 1.5 # Price must be this times higher to replace current periods
 
 # Evening optimization configuration

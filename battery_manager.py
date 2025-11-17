@@ -85,8 +85,7 @@ class BatteryManager:
 
             response = client.read_holding_registers(
                 address=self.TOU_REGISTER,
-                count=43,
-                slave=1
+                count=43
             )
 
             if response.isError():
@@ -121,8 +120,7 @@ class BatteryManager:
 
             response = client.read_holding_registers(
                 address=37760,  # SOC register address
-                count=1,
-                slave=1
+                count=1
             )
 
             if response.isError():
@@ -158,8 +156,7 @@ class BatteryManager:
 
             response = client.read_holding_registers(
                 address=self.MODE_REGISTER,
-                count=1,
-                slave=1
+                count=1
             )
 
             if response.isError():
@@ -199,8 +196,7 @@ class BatteryManager:
             
             response = client.write_registers(
                 address=self.MODE_REGISTER,
-                values=[mode],
-                slave=1
+                values=[mode]
             )
 
             if response.isError():
@@ -234,8 +230,7 @@ class BatteryManager:
 
             response = client.write_registers(
                 address=self.TOU_REGISTER,
-                values=data,
-                slave=1
+                values=data
             )
 
             if response.isError():

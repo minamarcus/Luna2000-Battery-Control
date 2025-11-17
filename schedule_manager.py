@@ -25,7 +25,34 @@ class ScheduleManager:
             MAX_DISCHARGING_PERIODS
         )
         self.stockholm_tz = STOCKHOLM_TZ
-        self.solar_forecast = SolarForecast()  # Initialize the solar forecast
+        self.solar_forecast = SolarForecast()
+    
+    def remove_overlapping_periods(self, periods: list) -> list:
+        """
+        Remove overlapping periods, keeping only non-overlapping ones.
+        When there's an overlap, keep the first period encountered.
+        """
+        if not periods:
+            return []
+        
+        # Sort periods by start time
+        sorted_periods = sorted(periods, key=lambda x: (x['days'], x['start_time']))
+        
+        non_overlapping = []
+        
+        for period in sorted_periods:
+            has_overlap = False
+            
+            for existing in non_overlapping:
+                if self.period_manager.check_overlap(period, existing):
+                    logger.info(f"Removing overlapping period: {period['start_time']//60:02d}:00-{period['end_time']//60:02d}:00 (overlaps with existing)")
+                    has_overlap = True
+                    break
+            
+            if not has_overlap:
+                non_overlapping.append(period)
+        
+        return non_overlapping
         
     def update_schedule(self) -> bool:
         """Main function to update the schedule with retries."""
@@ -101,19 +128,11 @@ class ScheduleManager:
                 new_periods = charging_periods + discharging_periods
                 self.schedule_data_manager.log_schedule(new_periods, "New Periods for Tomorrow")
                 
-                # Merge and check for overlaps
-                all_periods = sorted(current_periods + new_periods, 
-                                   key=lambda x: x['start_time'])
-                final_periods = []
+                # Merge all periods and remove overlaps
+                all_periods = current_periods + new_periods
                 
-                for period in all_periods:
-                    overlap = False
-                    for existing in final_periods:
-                        if self.period_manager.check_overlap(period, existing):
-                            overlap = True
-                            break
-                    if not overlap:
-                        final_periods.append(period)
+                # Remove any overlapping periods
+                final_periods = self.remove_overlapping_periods(all_periods)
                 
                 # Create and write new register data
                 new_register_data = self.schedule_data_manager.create_register_data(final_periods)
@@ -227,18 +246,9 @@ class ScheduleManager:
                     logger.info("No new periods created for evening optimization")
                     return True  # Not an error, just no action needed
                 
-                # Merge with existing periods
-                all_periods = sorted(current_periods + new_periods, key=lambda x: x['start_time'])
-                final_periods = []
-                
-                for period in all_periods:
-                    overlap = False
-                    for existing in final_periods:
-                        if self.period_manager.check_overlap(period, existing):
-                            overlap = True
-                            break
-                    if not overlap:
-                        final_periods.append(period)
+                # Merge with existing periods and remove overlaps
+                all_periods = current_periods + new_periods
+                final_periods = self.remove_overlapping_periods(all_periods)
                 
                 # Create and write new register data
                 new_register_data = self.schedule_data_manager.create_register_data(final_periods)
